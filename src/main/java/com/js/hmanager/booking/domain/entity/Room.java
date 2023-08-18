@@ -7,7 +7,13 @@ import java.util.UUID;
 
 @Getter
 public class Room {
-    private UUID id;
+    private final UUID id;
     private String number;
     private BigDecimal dailyTax;
+
+    public Room(String number, BigDecimal dailyTax) {
+        this.id = UUID.randomUUID();
+        this.number = number;
+        this.dailyTax = dailyTax;
+    }
 }
