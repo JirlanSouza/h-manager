@@ -1,4 +1,4 @@
-package com.js.hmanager.booking.domain.entity;
+package com.js.hmanager.booking.domain.model.entity;
 
 import lombok.Getter;
 
