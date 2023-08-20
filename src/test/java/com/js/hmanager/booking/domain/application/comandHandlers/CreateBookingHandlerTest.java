@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
@@ -23,8 +22,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CreateBookingHandlerTest {
@@ -51,14 +49,14 @@ class CreateBookingHandlerTest {
                 List.of(UUID.randomUUID())
         );
 
-        when(customerRepository.exists(Mockito.isA(UUID.class))).thenReturn(true);
-        when(inventoryService.findRooms(Mockito.anyList()))
+        when(customerRepository.exists(isA(UUID.class))).thenReturn(true);
+        when(inventoryService.findRooms(anyList()))
                 .thenReturn(List.of(new Room("1001", new BigDecimal("220.99"))));
 
         UUID bookingId = createBookingHandler.handle(command);
 
         assertNotNull(bookingId);
-        verify(bookingRepository, Mockito.only()).save(Mockito.isA(Booking.class));
+        verify(bookingRepository, only()).save(isA(Booking.class));
     }
 
     @Test
@@ -84,7 +82,7 @@ class CreateBookingHandlerTest {
                 List.of()
         );
 
-        when(customerRepository.exists(Mockito.isA(UUID.class))).thenReturn(true);
+        when(customerRepository.exists(isA(UUID.class))).thenReturn(true);
 
         assertThrows(InvalidArgumentDomainException.class, () -> createBookingHandler.handle(command));
     }
