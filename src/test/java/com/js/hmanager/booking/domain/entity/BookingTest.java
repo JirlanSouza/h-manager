@@ -9,8 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -38,19 +37,19 @@ class BookingTest {
     @Test
     @DisplayName("Should update totalPrice when add new room")
     void addRoom() {
+        ArrayList<Room> rooms = new ArrayList<>();
+        rooms.add(new Room("1001", new BigDecimal("225.99")));
         Booking booking = new Booking(
                 LocalDateTime.of(2023, Month.AUGUST, 1, 14, 0),
-                LocalDateTime.of(2023, Month.AUGUST, 3, 8, 30)
+                LocalDateTime.of(2023, Month.AUGUST, 3, 8, 30),
+                rooms
         );
 
-        Room room1 = new Room("1001", new BigDecimal("225.99"));
-        Room room2 = new Room("1002", new BigDecimal("325.99"));
-
-        booking.addRoom(room1);
+        Room room = new Room("1002", new BigDecimal("325.99"));
 
         assertEquals(booking.getTotalPrice(), new BigDecimal("451.98"));
 
-        booking.addRoom(room2);
+        booking.addRoom(room);
 
         assertEquals(booking.getTotalPrice(), new BigDecimal("1103.96"));
     }

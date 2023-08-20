@@ -24,11 +24,13 @@ public class Booking {
     private BigDecimal totalPrice;
     private BookingStatus status;
 
-    public Booking(LocalDateTime checkIn, LocalDateTime checkOut) {
+    public Booking(LocalDateTime checkIn, LocalDateTime checkOut, List<Room> rooms) {
+        if (rooms.isEmpty()) throw new InvalidArgumentDomainException("The rooms list must have one or more rooms");
+
         this.id = UUID.randomUUID();
         this.checkInDate = checkIn;
         this.checkOutDate = checkOut;
-        this.roms = new ArrayList<>();
+        this.roms = rooms;
         this.totalPrice = BigDecimal.ZERO;
     }
 
