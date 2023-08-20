@@ -1,9 +1,9 @@
 package com.js.hmanager.booking.domain.application.comandHandlers;
 
 import com.js.hmanager.booking.domain.application.comands.CreateCustomerCommand;
-import com.js.hmanager.booking.domain.model.entity.Cpf;
-import com.js.hmanager.booking.domain.model.entity.Customer;
-import com.js.hmanager.booking.domain.model.repository.CustomerRepository;
+import com.js.hmanager.booking.domain.model.customer.Cpf;
+import com.js.hmanager.booking.domain.model.customer.Customer;
+import com.js.hmanager.booking.domain.model.customer.CustomerRepository;
 import com.js.hmanager.sharad.domainExceptions.ConflictEntityDomainException;
 
 import java.util.UUID;

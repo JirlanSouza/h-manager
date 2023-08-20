@@ -2,9 +2,9 @@ package com.js.hmanager.booking.domain.application.comandHandlers;
 
 import com.js.hmanager.booking.domain.application.comands.CreateCustomerAddressDto;
 import com.js.hmanager.booking.domain.application.comands.CreateCustomerCommand;
-import com.js.hmanager.booking.domain.model.entity.Cpf;
-import com.js.hmanager.booking.domain.model.entity.Customer;
-import com.js.hmanager.booking.domain.model.repository.CustomerRepository;
+import com.js.hmanager.booking.domain.model.customer.Cpf;
+import com.js.hmanager.booking.domain.model.customer.Customer;
+import com.js.hmanager.booking.domain.model.customer.CustomerRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

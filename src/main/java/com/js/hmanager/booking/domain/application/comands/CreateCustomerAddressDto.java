@@ -1,6 +1,6 @@
 package com.js.hmanager.booking.domain.application.comands;
 
-import com.js.hmanager.booking.domain.model.entity.Address;
+import com.js.hmanager.booking.domain.model.customer.Address;
 
 public record CreateCustomerAddressDto(
         String street,
