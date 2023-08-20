@@ -1,6 +1,8 @@
 package com.js.hmanager.booking.domain.entity;
 
-import com.js.hmanager.booking.domain.enums.BookingStatus;
+import com.js.hmanager.booking.domain.model.entity.Booking;
+import com.js.hmanager.booking.domain.model.entity.Room;
+import com.js.hmanager.booking.domain.model.enums.BookingStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +12,7 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BookingTest {
 
