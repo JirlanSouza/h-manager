@@ -1,8 +1,8 @@
 package com.js.hmanager.booking.domain.entity;
 
-import com.js.hmanager.booking.domain.model.entity.Booking;
-import com.js.hmanager.booking.domain.model.entity.Room;
-import com.js.hmanager.booking.domain.model.enums.BookingStatus;
+import com.js.hmanager.booking.domain.model.booking.Booking;
+import com.js.hmanager.booking.domain.model.booking.Room;
+import com.js.hmanager.booking.domain.model.booking.BookingStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

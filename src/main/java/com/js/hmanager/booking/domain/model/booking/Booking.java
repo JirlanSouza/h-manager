@@ -1,6 +1,5 @@
-package com.js.hmanager.booking.domain.model.entity;
+package com.js.hmanager.booking.domain.model.booking;
 
-import com.js.hmanager.booking.domain.model.enums.BookingStatus;
 import com.js.hmanager.sharad.domainExceptions.InvalidArgumentDomainException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -10,7 +9,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 

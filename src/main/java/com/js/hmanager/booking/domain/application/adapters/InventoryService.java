@@ -1,6 +1,6 @@
 package com.js.hmanager.booking.domain.application.adapters;
 
-import com.js.hmanager.booking.domain.model.entity.Room;
+import com.js.hmanager.booking.domain.model.booking.Room;
 
 import java.util.List;
 import java.util.UUID;
