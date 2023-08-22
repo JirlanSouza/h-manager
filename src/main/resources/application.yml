@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_DB}?createDatabaseIfNotExist=true&serverTimezone=UTC
+    username: ${DATABASE_USER_NAME}
+    password: ${DATABASE_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+server:
+  error:
+    include-stacktrace: never
+
+axon:
+  axonserver:
+    enabled: false
