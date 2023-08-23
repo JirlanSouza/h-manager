@@ -24,6 +24,11 @@ class CpfTest {
     }
 
     @Test
+    @DisplayName("Should throw InvalidArgumentDomainException when creating cpf with null value")
+    void throwErrorWhenCreateCpfWithNullValue() {
+        assertThrows(InvalidArgumentDomainException.class, () -> new Cpf(null));
+    }
+    @Test
     @DisplayName("Should throw InvalidArgumentDomainException when creating invalid cpf")
     void throwErrorWhenCreateInvalidCpf() {
         assertThrows(InvalidArgumentDomainException.class, () -> new Cpf("011.444.777-35"));

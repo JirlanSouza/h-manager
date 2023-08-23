@@ -13,6 +13,10 @@ public record Cpf(String value) {
     }
 
     private String validOrThrow(String rawCpf) {
+        if (rawCpf == null) {
+            throw new InvalidArgumentDomainException("Invalid cpf");
+        }
+
         String cpf = this.clearInvalidCharacters(rawCpf);
         if (!isValid(cpf)) {
             throw new InvalidArgumentDomainException("Invalid cpf: '%s'".formatted(rawCpf));
