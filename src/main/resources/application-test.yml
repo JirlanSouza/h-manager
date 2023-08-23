@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/h_manager_test_db?createDatabaseIfNotExist=true&serverTimezone=UTC
+    username: postgres
+    password: postgres
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+  flyway:
+    clean-disabled: false
+
+axon:
+  axonserver:
+    enabled: false
