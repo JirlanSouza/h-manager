@@ -1,6 +1,7 @@
 package com.js.hmanager.booking.infra.customer.rest;
 
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,7 +12,11 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.UUID;
+
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -45,11 +50,13 @@ class CustomerControllerIT {
                 }
                 """;
 
-        given().basePath("/customers")
+        Response response = given().basePath("/customers")
                 .port(port).contentType(ContentType.JSON)
                 .body(createCustomerRequestBody)
-                .when().post()
-                .then().statusCode(HttpStatus.CREATED.value());
+                .when().post();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.body().as(UUID.class)).isInstanceOf(UUID.class);
     }
 
     @Test
@@ -75,7 +82,9 @@ class CustomerControllerIT {
                 .port(port).contentType(ContentType.JSON)
                 .body(createCustomerRequestBody)
                 .when().post()
-                .then().statusCode(HttpStatus.BAD_REQUEST.value());
+                .then().statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("status", equalTo(HttpStatus.BAD_REQUEST.value()))
+                .body("detail", not(blankString()));
     }
 
 }
