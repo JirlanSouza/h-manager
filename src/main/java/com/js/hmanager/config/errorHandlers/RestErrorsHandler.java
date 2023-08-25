@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
 @ControllerAdvice
-public class ControllerAdviceConfig {
+public class RestErrorsHandler {
 
     @ExceptionHandler({InvalidArgumentDomainException.class,})
     public ResponseEntity<ProblemDetail> handleBadRequest(RuntimeException ex, WebRequest req) {
