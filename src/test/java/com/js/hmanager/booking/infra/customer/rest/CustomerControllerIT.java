@@ -87,4 +87,35 @@ class CustomerControllerIT {
                 .body("detail", not(blankString()));
     }
 
+    @Test
+    @DisplayName("Should return 409 http status when create customer with existent cpf")
+    void return409() {
+        String createCustomerRequestBody = """
+                {
+                    "name": "Joe Jho",
+                        "cpf": "111.444.777-35",
+                        "address": {
+                            "street": "Test street",
+                            "number": "999",
+                            "neighborhood": "Test neighborhood",
+                            "zipCode": "12356-458",
+                            "city": "Test city",
+                            "state": "Test state",
+                            "country": "Test country"
+                        }
+                }
+                """;
+
+        given().basePath("/customers").contentType(ContentType.JSON)
+                .port(port).body(createCustomerRequestBody).post();
+
+        given().basePath("/customers")
+                .port(port).contentType(ContentType.JSON)
+                .body(createCustomerRequestBody)
+                .when().post()
+                .then().statusCode(HttpStatus.CONFLICT.value())
+                .body("status", equalTo(HttpStatus.CONFLICT.value()))
+                .body("detail", not(blankString())).log();
+    }
+
 }
