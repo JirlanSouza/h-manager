@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -84,13 +85,20 @@ public class Booking {
     }
 
     private void calculateTotalPrice() {
-        Period periodOfStay = Period.between(checkInDate.toLocalDate(), checkOutDate.toLocalDate());
+        long daysOfStay = calculateDaysOfStay();
         totalPrice = BigDecimal.ZERO;
 
-        roms.forEach(r -> {
-            totalPrice = totalPrice.add(
-                    r.getDailyTax().multiply(BigDecimal.valueOf(periodOfStay.getDays()))
-            );
-        });
+        for (Room r : roms) {
+            totalPrice = totalPrice.add(r.getDailyRate().multiply(BigDecimal.valueOf(daysOfStay)));
+        }
+    }
+
+    private long calculateDaysOfStay() {
+        long days = checkInDate.toLocalDate().until(checkOutDate.toLocalDate(), ChronoUnit.DAYS);
+
+        if (checkInDate.getHour() <= 11) days++;
+        if (checkOutDate.getHour() >= 12) days++;
+
+        return days;
     }
 }
