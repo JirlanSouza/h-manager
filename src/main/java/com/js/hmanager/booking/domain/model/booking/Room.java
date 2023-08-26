@@ -9,11 +9,11 @@ import java.util.UUID;
 public class Room {
     private final UUID id;
     private String number;
-    private BigDecimal dailyTax;
+    private BigDecimal dailyRate;
 
-    public Room(String number, BigDecimal dailyTax) {
+    public Room(String number, BigDecimal dailyRate) {
         this.id = UUID.randomUUID();
         this.number = number;
-        this.dailyTax = dailyTax;
+        this.dailyRate = dailyRate;
     }
 }
