@@ -4,8 +4,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.Month;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -13,12 +14,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BookingTest {
 
+    private OffsetDateTime makeDateTime(int year, Month month, int dayOfMonth, int hour, int minute, ZoneOffset zoneOffset) {
+        return OffsetDateTime.of(year, month.getValue(), dayOfMonth, hour, minute, 0, 0, zoneOffset);
+    }
+
     @Test
     @DisplayName("Should restore with all data")
     void restore() {
         UUID id = UUID.randomUUID();
-        LocalDateTime checkIn = LocalDateTime.of(2023, Month.AUGUST, 1, 14, 0);
-        LocalDateTime checkOut = LocalDateTime.of(2023, Month.AUGUST, 5, 8, 30);
+        OffsetDateTime checkIn = makeDateTime(2023, Month.AUGUST, 1, 14, 0, ZoneOffset.UTC);
+        OffsetDateTime checkOut = makeDateTime(2023, Month.AUGUST, 5, 8, 30, ZoneOffset.UTC);
         ArrayList<Room> rooms = new ArrayList<>();
         BigDecimal totalPrice = new BigDecimal(0);
 
@@ -38,8 +43,8 @@ class BookingTest {
         ArrayList<Room> rooms = new ArrayList<>();
         rooms.add(new Room("1001", new BigDecimal("225.99")));
         Booking booking = new Booking(
-                LocalDateTime.of(2023, Month.AUGUST, 1, 14, 0),
-                LocalDateTime.of(2023, Month.AUGUST, 3, 8, 30),
+                makeDateTime(2023, Month.AUGUST, 1, 14, 0, ZoneOffset.UTC),
+                makeDateTime(2023, Month.AUGUST, 3, 8, 30, ZoneOffset.UTC),
                 rooms
         );
 
@@ -58,8 +63,8 @@ class BookingTest {
         ArrayList<Room> rooms = new ArrayList<>();
         rooms.add(new Room("1001", new BigDecimal("100.00")));
         Booking booking = new Booking(
-                LocalDateTime.of(2023, Month.AUGUST, 1, 15, 0),
-                LocalDateTime.of(2023, Month.AUGUST, 3, 11, 30),
+                makeDateTime(2023, Month.AUGUST, 1, 15, 0, ZoneOffset.UTC),
+                makeDateTime(2023, Month.AUGUST, 3, 11, 30, ZoneOffset.UTC),
                 rooms
         );
 
@@ -72,8 +77,8 @@ class BookingTest {
         ArrayList<Room> rooms = new ArrayList<>();
         rooms.add(new Room("1001", new BigDecimal("100.00")));
         Booking booking = new Booking(
-                LocalDateTime.of(2023, Month.AUGUST, 1, 9, 40),
-                LocalDateTime.of(2023, Month.AUGUST, 3, 11, 30),
+                makeDateTime(2023, Month.AUGUST, 1, 9, 40, ZoneOffset.UTC),
+                makeDateTime(2023, Month.AUGUST, 3, 11, 30, ZoneOffset.UTC),
                 rooms
         );
 
@@ -86,8 +91,8 @@ class BookingTest {
         ArrayList<Room> rooms = new ArrayList<>();
         rooms.add(new Room("1001", new BigDecimal("100.00")));
         Booking booking = new Booking(
-                LocalDateTime.of(2023, Month.AUGUST, 1, 15, 0),
-                LocalDateTime.of(2023, Month.AUGUST, 3, 14, 30),
+                makeDateTime(2023, Month.AUGUST, 1, 15, 0, ZoneOffset.UTC),
+                makeDateTime(2023, Month.AUGUST, 3, 14, 30, ZoneOffset.UTC),
                 rooms
         );
 
@@ -100,8 +105,8 @@ class BookingTest {
         ArrayList<Room> rooms = new ArrayList<>();
         rooms.add(new Room("1001", new BigDecimal("100.00")));
         Booking booking = new Booking(
-                LocalDateTime.of(2023, Month.AUGUST, 1, 10, 0),
-                LocalDateTime.of(2023, Month.AUGUST, 3, 15, 0),
+                makeDateTime(2023, Month.AUGUST, 1, 10, 0, ZoneOffset.UTC),
+                makeDateTime(2023, Month.AUGUST, 3, 15, 0, ZoneOffset.UTC),
                 rooms
         );
 

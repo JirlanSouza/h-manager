@@ -7,7 +7,7 @@ import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -17,13 +17,13 @@ import java.util.UUID;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Booking {
     private final UUID id;
-    private LocalDateTime checkInDate;
-    private LocalDateTime checkOutDate;
+    private OffsetDateTime checkInDate;
+    private OffsetDateTime checkOutDate;
     private List<Room> roms;
     private BigDecimal totalPrice;
     private BookingStatus status;
 
-    public Booking(LocalDateTime checkIn, LocalDateTime checkOut, List<Room> rooms) {
+    public Booking(OffsetDateTime checkIn, OffsetDateTime checkOut, List<Room> rooms) {
         if (rooms.isEmpty()) throw new InvalidArgumentDomainException("The rooms list must have one or more rooms");
 
         this.id = UUID.randomUUID();
@@ -35,8 +35,8 @@ public class Booking {
 
     public static Booking restore(
             UUID id,
-            LocalDateTime checkIn,
-            LocalDateTime checkOut,
+            OffsetDateTime checkIn,
+            OffsetDateTime checkOut,
             List<Room> roms,
             BigDecimal totalPrice,
             BookingStatus status
@@ -48,7 +48,7 @@ public class Booking {
         this.roms.add(room);
     }
 
-    public void changeCheckinDate(LocalDateTime newCheckInDate) {
+    public void changeCheckinDate(OffsetDateTime newCheckInDate) {
         Period periodToCheckinDate = Period.between(
                 LocalDate.now(),
                 checkInDate.toLocalDate()
@@ -70,7 +70,7 @@ public class Booking {
         return totalPrice;
     }
 
-    public void changeCheckOutDate(LocalDateTime newCheckOutDate) {
+    public void changeCheckOutDate(OffsetDateTime newCheckOutDate) {
         Period periodToCheckOutDate = Period.between(
                 LocalDate.now(),
                 checkOutDate.toLocalDate()

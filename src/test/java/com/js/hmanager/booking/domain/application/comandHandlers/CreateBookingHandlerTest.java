@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,8 +44,8 @@ class CreateBookingHandlerTest {
     void createNewBooking() {
         CreateBookingCommand command = new CreateBookingCommand(
                 UUID.randomUUID(),
-                LocalDateTime.now(),
-                LocalDateTime.now().plusDays(2),
+                OffsetDateTime.now(),
+                OffsetDateTime.now().plusDays(2),
                 List.of(UUID.randomUUID())
         );
 
@@ -64,8 +64,8 @@ class CreateBookingHandlerTest {
     void createBookingWithNonexistentCustomer() {
         CreateBookingCommand command = new CreateBookingCommand(
                 UUID.randomUUID(),
-                LocalDateTime.now(),
-                LocalDateTime.now().plusDays(2),
+                OffsetDateTime.now(),
+                OffsetDateTime.now().plusDays(2),
                 List.of(UUID.randomUUID())
         );
 
@@ -77,8 +77,8 @@ class CreateBookingHandlerTest {
     void createBookingWithEmptyRoomList() {
         CreateBookingCommand command = new CreateBookingCommand(
                 UUID.randomUUID(),
-                LocalDateTime.now(),
-                LocalDateTime.now().plusDays(2),
+                OffsetDateTime.now(),
+                OffsetDateTime.now().plusDays(2),
                 List.of()
         );
 
