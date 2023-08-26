@@ -1,5 +1,6 @@
 package com.js.hmanager.inventory.domain.model.room;
 
+import com.js.hmanager.sharad.domainExceptions.InvalidArgumentDomainException;
 import lombok.Getter;
 
 import java.math.BigDecimal;
@@ -10,20 +11,21 @@ public class Room {
     private final UUID id;
     private String number;
     private RoomBeds beds;
-    private BigDecimal dailyTax;
+    private BigDecimal dailyRate;
     private boolean available;
 
-    public Room(String number, int doubleBeds, int singleBeds, BigDecimal dailyTax, boolean available) {
-        this(UUID.randomUUID(), number, doubleBeds, singleBeds, dailyTax, available);
+    public Room(String number, int doubleBeds, int singleBeds, BigDecimal dailyRate, boolean available) {
+        this(UUID.randomUUID(), number, doubleBeds, singleBeds, dailyRate, available);
     }
 
-    public Room(UUID id, String number, int doubleBeds, int singleBeds, BigDecimal dailyTax, boolean available) {
+    public Room(UUID id, String number, int doubleBeds, int singleBeds, BigDecimal dailyRate, boolean available) {
         this.id = id;
         this.number = number;
         this.beds = new RoomBeds(doubleBeds, singleBeds);
-        this.dailyTax = dailyTax;
+        this.dailyRate = dailyRate;
         this.available = available;
-
+        
+        validateDailyRate();
     }
 
     public static Room restore(
@@ -31,10 +33,16 @@ public class Room {
             String number,
             int doubleBeds,
             int singleBeds,
-            BigDecimal dailyTax,
+            BigDecimal dailyRate,
             boolean available
     ) {
-        return new Room(id, number, doubleBeds, singleBeds, dailyTax, available);
+        return new Room(id, number, doubleBeds, singleBeds, dailyRate, available);
+    }
+    
+    private void validateDailyRate() {
+        if (dailyRate.doubleValue() <= 0) {
+            throw new InvalidArgumentDomainException("The daily rate must be greater than 0.0");
+        }
     }
 
     public int getCapacity() {
