@@ -1,0 +1,1 @@
+alter table customers add column email varchar(100) unique, add column telephone varchar(14);
