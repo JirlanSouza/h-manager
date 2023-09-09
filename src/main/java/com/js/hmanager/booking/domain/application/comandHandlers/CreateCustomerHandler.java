@@ -31,7 +31,13 @@ public class CreateCustomerHandler {
             );
         }
 
-        Customer customer = new Customer(command.name(), customerCpf, command.address().toDomainAddress());
+        Customer customer = new Customer(
+                command.name(),
+                customerCpf,
+                command.email(),
+                command.telephone(),
+                command.address().toDomainAddress()
+        );
 
         customerRepository.save(customer);
 

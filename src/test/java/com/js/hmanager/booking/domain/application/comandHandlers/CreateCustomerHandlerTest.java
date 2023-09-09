@@ -30,7 +30,7 @@ class CreateCustomerHandlerTest {
     @DisplayName("Should create a new customer")
     void createNewCustomer() {
         CreateCustomerCommand command = new CreateCustomerCommand(
-                "Joe jho", "111.444.777-35",
+                "Joe jho", "111.444.777-35", "joejho@hmanager.com", "1296969696",
                 new CreateCustomerAddressDto(
                         "test street",
                         "100",

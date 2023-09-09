@@ -2,7 +2,7 @@ package com.js.hmanager.booking.domain.model.customer;
 
 public record Address(
         String street,
-        String number,
+        String houseNumber,
         String neighborhood,
         String zipCode,
         String City,

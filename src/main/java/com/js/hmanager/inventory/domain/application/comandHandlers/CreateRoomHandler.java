@@ -14,7 +14,7 @@ public class CreateRoomHandler {
         boolean existed = roomRepository.existByNumber(command.number());
 
         if (existed) {
-            throw new ConflictEntityDomainException("The room with number: '%s' already exists".formatted(command.number()));
+            throw new ConflictEntityDomainException("The room with houseNumber: '%s' already exists".formatted(command.number()));
         }
 
         Room room = new Room(

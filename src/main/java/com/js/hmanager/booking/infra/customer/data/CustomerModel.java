@@ -3,10 +3,7 @@ package com.js.hmanager.booking.infra.customer.data;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -14,6 +11,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "customers")
 public class CustomerModel {
@@ -21,6 +19,8 @@ public class CustomerModel {
     private UUID id;
     private String name;
     private String cpf;
+    private String email;
+    private String telephone;
     private String addressStreet;
     private String addressNumber;
     private String addressNeighborhood;

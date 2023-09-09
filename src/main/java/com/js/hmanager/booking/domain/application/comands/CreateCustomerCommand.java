@@ -8,6 +8,10 @@ public record CreateCustomerCommand(
         String name,
         @NotNull
         String cpf,
+
+        String email,
+
+        String telephone,
         @NotNull
         CreateCustomerAddressDto address
 ) {

@@ -22,18 +22,20 @@ public interface CustomerJpaRepository extends JpaRepository<CustomerModel, UUID
     boolean existsByCpf(String cpfValue);
 
     default void save(Customer customer) {
-        save(new CustomerModel(
-                        customer.getId(),
-                        customer.getName(),
-                        customer.getCpf().value(),
-                        customer.getAddress().street(),
-                        customer.getAddress().number(),
-                        customer.getAddress().neighborhood(),
-                        customer.getAddress().zipCode(),
-                        customer.getAddress().City(),
-                        customer.getAddress().state(),
-                        customer.getAddress().country()
-                )
+        save(CustomerModel.builder()
+                .id(customer.getId())
+                .name(customer.getName())
+                .cpf(customer.getCpf().value())
+                .email(customer.getEmail())
+                .telephone(customer.getTelephone())
+                .addressStreet(customer.getAddress().street())
+                .addressNumber(customer.getAddress().houseNumber())
+                .addressNeighborhood(customer.getAddress().neighborhood())
+                .addressZipCode(customer.getAddress().zipCode())
+                .addressCity(customer.getAddress().City())
+                .addressState(customer.getAddress().state())
+                .addressCountry(customer.getAddress().country())
+                .build()
         );
     }
 }
