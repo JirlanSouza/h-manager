@@ -4,13 +4,13 @@ import com.js.hmanager.booking.query.model.CustomerSummaryResponse;
 import com.js.hmanager.booking.query.model.CustomersSummaryQuery;
 import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.concurrent.ExecutionException;
 
-@Controller
+@RestController
 @RequestMapping("/customers")
 public class CustomerQueryController {
     private final QueryGateway queryGateway;
