@@ -5,6 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
 
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Getter
@@ -28,4 +29,5 @@ public class CustomerModel {
     private String addressCity;
     private String addressState;
     private String addressCountry;
+    private OffsetDateTime customerSince;
 }

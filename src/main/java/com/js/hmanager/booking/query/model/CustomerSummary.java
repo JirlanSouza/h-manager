@@ -22,5 +22,5 @@ public class CustomerSummary {
     String name;
     String cpf;
     String email;
-    OffsetDateTime since;
+    OffsetDateTime customerSince;
 }

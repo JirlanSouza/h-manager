@@ -35,6 +35,7 @@ public interface CustomerJpaRepository extends JpaRepository<CustomerModel, UUID
                 .addressCity(customer.getAddress().City())
                 .addressState(customer.getAddress().state())
                 .addressCountry(customer.getAddress().country())
+                .customerSince(customer.getCustomerSince())
                 .build()
         );
     }
