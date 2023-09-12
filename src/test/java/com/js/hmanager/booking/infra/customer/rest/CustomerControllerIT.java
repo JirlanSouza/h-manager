@@ -1,5 +1,7 @@
 package com.js.hmanager.booking.infra.customer.rest;
 
+import com.js.hmanager.booking.infra.customer.data.CustomerJpaRepository;
+import com.js.hmanager.booking.infra.customer.data.CustomerModel;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.flywaydb.core.Flyway;
@@ -12,6 +14,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
@@ -24,6 +27,9 @@ class CustomerControllerIT {
 
     @LocalServerPort
     private int port;
+
+    @Autowired
+    private CustomerJpaRepository customerJpaRepository;
 
     @BeforeEach
     void clearDatabase(@Autowired Flyway flyway) {
@@ -40,7 +46,7 @@ class CustomerControllerIT {
                         "cpf": "111.444.777-35",
                         "address": {
                             "street": "Test street",
-                            "number": "999",
+                            "houseNumber": "999",
                             "neighborhood": "Test neighborhood",
                             "zipCode": "12356-458",
                             "city": "Test city",
@@ -57,10 +63,25 @@ class CustomerControllerIT {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.body().as(UUID.class)).isInstanceOf(UUID.class);
+
+        Optional<CustomerModel> customerModelOptional = customerJpaRepository.findById(response.getBody().as(UUID.class));
+        assertThat(customerModelOptional.isPresent()).isTrue();
+
+        CustomerModel customerModel = customerModelOptional.get();
+
+        assertThat(customerModel.getName()).isEqualTo("Joe Jho");
+        assertThat((customerModel.getCpf())).isEqualTo("111.444.777-35");
+        assertThat(customerModel.getAddressStreet()).isEqualTo("Test street");
+        assertThat(customerModel.getAddressNumber()).isEqualTo("999");
+        assertThat(customerModel.getAddressNeighborhood()).isEqualTo("Test neighborhood");
+        assertThat(customerModel.getAddressZipCode()).isEqualTo("12356-458");
+        assertThat(customerModel.getAddressCity()).isEqualTo("Test city");
+        assertThat(customerModel.getAddressState()).isEqualTo("Test state");
+        assertThat(customerModel.getAddressCountry()).isEqualTo("Test country");
     }
 
     @Test
-    @DisplayName("Should return 404 http status when create invalid customer data")
+    @DisplayName("Should return 400 http status when create invalid customer data")
     void return404() {
         String createCustomerRequestBody = """
                 {
