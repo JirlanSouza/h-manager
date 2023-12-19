@@ -3,6 +3,7 @@ package com.js.hmanager.booking.query.rest;
 import com.js.hmanager.booking.query.model.CustomerSummaryResponse;
 import com.js.hmanager.booking.query.model.CustomersSummaryQuery;
 import org.axonframework.queryhandling.QueryGateway;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +22,7 @@ public class CustomerQueryController {
 
     @GetMapping
     public CustomerSummaryResponse getCustomerSummary(
-            Pageable pageable
+            @ParameterObject Pageable pageable
     ) throws ExecutionException, InterruptedException {
         return queryGateway.query(new CustomersSummaryQuery(pageable), CustomerSummaryResponse.class).get();
     }
