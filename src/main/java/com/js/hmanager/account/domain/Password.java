@@ -1,4 +1,4 @@
-package com.js.hmanager.account.domain.valueObjects;
+package com.js.hmanager.account.domain;
 
 import com.js.hmanager.sharad.domainExceptions.InvalidArgumentDomainException;
 import lombok.EqualsAndHashCode;

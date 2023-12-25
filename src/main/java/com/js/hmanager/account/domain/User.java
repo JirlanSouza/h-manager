@@ -1,8 +1,5 @@
-package com.js.hmanager.account.domain.entities;
+package com.js.hmanager.account.domain;
 
-import com.js.hmanager.account.domain.enums.UserType;
-import com.js.hmanager.account.domain.valueObjects.Password;
-import com.js.hmanager.account.domain.valueObjects.UserName;
 import com.js.hmanager.sharad.domainExceptions.InvalidArgumentDomainException;
 import lombok.Getter;
 
