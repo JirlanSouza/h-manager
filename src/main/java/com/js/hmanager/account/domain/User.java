@@ -1,11 +1,14 @@
 package com.js.hmanager.account.domain;
 
 import com.js.hmanager.sharad.domainExceptions.InvalidArgumentDomainException;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.UUID;
 
 @Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class User {
     private final UUID id;
     private String firstName;
@@ -16,15 +19,6 @@ public class User {
 
     public User(String firstName, String lastName, UserName userName, Password password, UserType userType) {
         this.id = UUID.randomUUID();
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.userName = userName;
-        this.password = password;
-        this.userType = userType;
-    }
-
-    private User(UUID id, String firstName, String lastName, UserName userName, Password password, UserType userType) {
-        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
@@ -66,17 +60,5 @@ public class User {
         if (this.lastName.isEmpty() || this.lastName.length() < 3) {
             throw new InvalidArgumentDomainException("The last name have 3 or more characters");
         }
-    }
-
-    public void setUserName(UserName userName) {
-        this.userName = userName;
-    }
-
-    public void setPassword(Password password) {
-        this.password = password;
-    }
-
-    public void setUserType(UserType userType) {
-        this.userType = userType;
     }
 }
