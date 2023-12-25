@@ -1,4 +1,4 @@
-package com.js.hmanager.sharad.domainExceptions;
+package com.js.hmanager.common.domainExceptions;
 
 public class NotFoundEntityDomainException extends RuntimeException {
 

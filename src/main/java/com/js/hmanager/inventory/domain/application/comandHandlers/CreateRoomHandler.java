@@ -3,7 +3,7 @@ package com.js.hmanager.inventory.domain.application.comandHandlers;
 import com.js.hmanager.inventory.domain.application.commands.CreateRoomCommand;
 import com.js.hmanager.inventory.domain.model.room.Room;
 import com.js.hmanager.inventory.domain.model.room.RoomRepository;
-import com.js.hmanager.sharad.domainExceptions.ConflictEntityDomainException;
+import com.js.hmanager.common.domainExceptions.ConflictEntityDomainException;
 import org.axonframework.commandhandling.CommandHandler;
 import org.springframework.stereotype.Service;
 

@@ -6,7 +6,7 @@ import com.js.hmanager.booking.domain.model.booking.Booking;
 import com.js.hmanager.booking.domain.model.booking.BookingRepository;
 import com.js.hmanager.booking.domain.model.booking.Room;
 import com.js.hmanager.booking.domain.model.customer.CustomerRepository;
-import com.js.hmanager.sharad.domainExceptions.NotFoundEntityDomainException;
+import com.js.hmanager.common.domainExceptions.NotFoundEntityDomainException;
 
 import java.util.List;
 import java.util.UUID;

@@ -1,6 +1,6 @@
 package com.js.hmanager.inventory.domain.model.room;
 
-import com.js.hmanager.sharad.domainExceptions.InvalidArgumentDomainException;
+import com.js.hmanager.common.domainExceptions.InvalidArgumentDomainException;
 
 public record RoomBeds(int doubleBed, int singleBed) {
     public RoomBeds(int doubleBed, int singleBed) {

@@ -1,6 +1,6 @@
 package com.js.hmanager.booking.domain.model.customer;
 
-import com.js.hmanager.sharad.domainExceptions.InvalidArgumentDomainException;
+import com.js.hmanager.common.domainExceptions.InvalidArgumentDomainException;
 
 import java.util.Arrays;
 

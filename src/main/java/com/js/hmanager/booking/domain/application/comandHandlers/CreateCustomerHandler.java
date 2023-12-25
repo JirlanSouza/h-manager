@@ -4,7 +4,7 @@ import com.js.hmanager.booking.domain.application.comands.CreateCustomerCommand;
 import com.js.hmanager.booking.domain.model.customer.Cpf;
 import com.js.hmanager.booking.domain.model.customer.Customer;
 import com.js.hmanager.booking.domain.model.customer.CustomerRepository;
-import com.js.hmanager.sharad.domainExceptions.ConflictEntityDomainException;
+import com.js.hmanager.common.domainExceptions.ConflictEntityDomainException;
 import org.axonframework.commandhandling.CommandHandler;
 import org.springframework.stereotype.Service;
 

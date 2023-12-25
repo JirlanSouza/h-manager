@@ -1,7 +1,7 @@
 package com.js.hmanager.config.errorHandlers;
 
-import com.js.hmanager.sharad.domainExceptions.ConflictEntityDomainException;
-import com.js.hmanager.sharad.domainExceptions.InvalidArgumentDomainException;
+import com.js.hmanager.common.domainExceptions.ConflictEntityDomainException;
+import com.js.hmanager.common.domainExceptions.InvalidArgumentDomainException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;

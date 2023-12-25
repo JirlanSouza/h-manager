@@ -1,6 +1,6 @@
 package com.js.hmanager.account.domain;
 
-import com.js.hmanager.sharad.domainExceptions.InvalidArgumentDomainException;
+import com.js.hmanager.common.domainExceptions.InvalidArgumentDomainException;
 
 public record UserName(String value) {
     public UserName(String value) {
