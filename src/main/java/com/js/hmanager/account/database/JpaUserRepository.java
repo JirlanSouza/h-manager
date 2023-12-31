@@ -14,7 +14,7 @@ public interface JpaUserRepository extends CrudRepository<UserModel, UUID> {
 
     @Query("""
                 select new com.js.hmanager.account.authentication.UserDetailsModel(u.email, u.password, u.userType)
-                from UserModel as u
+                from UserModel as u where u.email = :email
             """)
     Optional<UserDetailsModel> findByEmail(String email);
 }

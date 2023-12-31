@@ -8,6 +8,8 @@ import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -68,5 +70,30 @@ class AuthenticationControllerIT {
     private void createUser(String email, String password) {
         User user = User.create("Joe", "Jho", email, password, "MANAGER");
         this.jpaUserRepository.save(UserModel.from(user));
+    }
+
+    @ParameterizedTest()
+    @ValueSource(booleans = {true, false})
+    @DisplayName("Should be return Unauthorized http status on authenticate with wrong email or password")
+    public void unauthorizedHttpStatus(boolean wrongEmail) {
+        var email = "test_user@hmanger.com.br";
+        var password = "Test%password0";
+
+        this.createUser(email, password);
+
+        if (wrongEmail) {
+            email = "wrong@hmanager.com.br";
+        } else {
+            password = "WrongPassword@1";
+        }
+
+
+        given().basePath("/auth/token")
+                .port(port)
+                .auth().preemptive().basic(email, password)
+                .when()
+                .post()
+                .then()
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 }
