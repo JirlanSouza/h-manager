@@ -14,3 +14,8 @@ spring:
 axon:
   axonserver:
     enabled: false
+auth:
+  keystore:
+    jks-location: classpath:/keystore/hmanager.jks
+    pass: asdf123
+    key-alias: hmanager_jwt
