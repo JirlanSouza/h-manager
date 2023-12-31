@@ -4,12 +4,15 @@ spring:
     username: local_user
     password: local_password
 
+
   jpa:
     hibernate:
       ddl-auto: none
+    show-sql: false
 
   flyway:
     clean-disabled: false
+
 
 axon:
   axonserver:
@@ -19,3 +22,6 @@ auth:
     jks-location: classpath:/keystore/hmanager.jks
     pass: asdf123
     key-alias: hmanager_jwt
+logging:
+  level:
+    web: info

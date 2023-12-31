@@ -1,10 +1,13 @@
 package com.js.hmanager.booking.infra.customer.rest;
 
+import com.js.hmanager.account.authentication.AuthenticationTestUtils;
 import com.js.hmanager.booking.infra.customer.data.CustomerJpaRepository;
 import com.js.hmanager.booking.infra.customer.data.CustomerModel;
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,6 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.preemptive;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -29,32 +33,34 @@ class CustomerControllerIT {
     private int port;
 
     @Autowired
+    private AuthenticationTestUtils authenticationTestUtils;
+
+    @Autowired
     private CustomerJpaRepository customerJpaRepository;
 
     @BeforeEach
-    void clearDatabase(@Autowired Flyway flyway) {
+    void prepareDatabase(@Autowired Flyway flyway) {
         flyway.clean();
         flyway.migrate();
+
+        var email = "test@hmanager.com.br";
+        var password = "TestPassword%0";
+
+
+        this.authenticationTestUtils.createUser(email, password);
+
+        RestAssured.authentication = preemptive().basic(email, password);
+    }
+
+    @AfterAll
+    static void clearDataBase(@Autowired Flyway flyway) {
+        flyway.clean();
     }
 
     @Test
     @DisplayName("Should return customer id")
     void createCustomer() {
-        String createCustomerRequestBody = """
-                {
-                    "name": "Joe Jho",
-                        "cpf": "111.444.777-35",
-                        "address": {
-                            "street": "Test street",
-                            "houseNumber": "999",
-                            "neighborhood": "Test neighborhood",
-                            "zipCode": "12356-458",
-                            "city": "Test city",
-                            "state": "Test state",
-                            "country": "Test country"
-                        }
-                }
-                """;
+        String createCustomerRequestBody = this.validCreteCustomerRequestBody();
 
         Response response = given().basePath("/customers")
                 .port(port).contentType(ContentType.JSON)
@@ -83,21 +89,7 @@ class CustomerControllerIT {
     @Test
     @DisplayName("Should return 400 http status when create invalid customer data")
     void return404() {
-        String createCustomerRequestBody = """
-                {
-                    "name": "Joe Jho",
-                        "cpf": "111.222.333-12",
-                        "address": {
-                            "street": "Test street",
-                            "number": "999",
-                            "neighborhood": "Test neighborhood",
-                            "zipCode": "12356-458",
-                            "city": "Test city",
-                            "state": "Test state",
-                            "country": "Test country"
-                        }
-                }
-                """;
+        String createCustomerRequestBody = this.invalidCreteCustomerRequestBody();
 
         given().basePath("/customers")
                 .port(port).contentType(ContentType.JSON)
@@ -111,21 +103,7 @@ class CustomerControllerIT {
     @Test
     @DisplayName("Should return 409 http status when create customer with existent cpf")
     void return409() {
-        String createCustomerRequestBody = """
-                {
-                    "name": "Joe Jho",
-                        "cpf": "111.444.777-35",
-                        "address": {
-                            "street": "Test street",
-                            "number": "999",
-                            "neighborhood": "Test neighborhood",
-                            "zipCode": "12356-458",
-                            "city": "Test city",
-                            "state": "Test state",
-                            "country": "Test country"
-                        }
-                }
-                """;
+        String createCustomerRequestBody = this.validCreteCustomerRequestBody();
 
         given().basePath("/customers").contentType(ContentType.JSON)
                 .port(port).body(createCustomerRequestBody).post();
@@ -137,6 +115,46 @@ class CustomerControllerIT {
                 .then().statusCode(HttpStatus.CONFLICT.value())
                 .body("status", equalTo(HttpStatus.CONFLICT.value()))
                 .body("detail", not(blankString())).log();
+    }
+
+    private String validCreteCustomerRequestBody() {
+        return """
+                {
+                    "name": "Joe Jho",
+                    "cpf": "111.444.777-35",
+                    "email": "joejho@gmail.com",
+                    "telephone": "65985890067",
+                    "address": {
+                        "street": "Test street",
+                        "houseNumber": "999",
+                        "neighborhood": "Test neighborhood",
+                        "zipCode": "12356-458",
+                        "city": "Test city",
+                        "state": "Test state",
+                        "country": "Test country"
+                    }
+                }
+                """;
+    }
+
+    private String invalidCreteCustomerRequestBody() {
+        return """
+                {
+                    "name": "Joe Jho",
+                    "cpf": "111.222.333-12",
+                    "email": "joejho@gmail.com",
+                    "telephone": "65985890067",
+                    "address": {
+                        "street": "Test street",
+                        "houseNumber": "999",
+                        "neighborhood": "Test neighborhood",
+                        "zipCode": "12356-458",
+                        "city": "Test city",
+                        "state": "Test state",
+                        "country": "Test country"
+                    }
+                }
+                """;
     }
 
 }

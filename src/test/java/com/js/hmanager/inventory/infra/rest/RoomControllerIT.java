@@ -1,10 +1,13 @@
 package com.js.hmanager.inventory.infra.rest;
 
+import com.js.hmanager.account.authentication.AuthenticationTestUtils;
 import com.js.hmanager.inventory.infra.data.RoomJpaRepository;
 import com.js.hmanager.inventory.infra.data.RoomModel;
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,6 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.preemptive;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -28,12 +32,28 @@ class RoomControllerIT {
     private int port;
 
     @Autowired
+    private AuthenticationTestUtils authenticationTestUtils;
+
+    @Autowired
     private RoomJpaRepository roomRepository;
 
     @BeforeEach
     void clearDatabase(@Autowired Flyway flyway) {
         flyway.clean();
         flyway.migrate();
+
+        var email = "test@hmanager.com.br";
+        var password = "TestPassword%0";
+
+
+        this.authenticationTestUtils.createUser(email, password);
+
+        RestAssured.authentication = preemptive().basic(email, password);
+    }
+
+    @AfterAll
+    static void clearDataBase(@Autowired Flyway flyway) {
+        flyway.clean();
     }
 
     @Test
