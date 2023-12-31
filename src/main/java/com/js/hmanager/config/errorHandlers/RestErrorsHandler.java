@@ -2,6 +2,8 @@ package com.js.hmanager.config.errorHandlers;
 
 import com.js.hmanager.common.domainExceptions.ConflictEntityDomainException;
 import com.js.hmanager.common.domainExceptions.InvalidArgumentDomainException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,8 @@ import org.springframework.web.context.request.WebRequest;
 
 @ControllerAdvice
 public class RestErrorsHandler {
+
+    private final Logger logger = LoggerFactory.getLogger(RestErrorsHandler.class);
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({InvalidArgumentDomainException.class,})
@@ -34,7 +38,7 @@ public class RestErrorsHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ProblemDetail> handleAll(RuntimeException ex, WebRequest req) {
-        System.out.println(ex.getClass());
+        this.logger.warn(ex.getMessage());
         return makeErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex, req);
     }
 
