@@ -1,8 +1,5 @@
 package com.js.hmanager.account.authentication;
 
-import com.js.hmanager.account.database.JpaUserRepository;
-import com.js.hmanager.account.database.UserModel;
-import com.js.hmanager.account.domain.User;
 import io.restassured.response.Response;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +28,7 @@ class AuthenticationControllerIT {
     private int port;
 
     @Autowired
-    private JpaUserRepository jpaUserRepository;
+    private AuthenticationTestUtils authenticationTestUtils;
 
     @Autowired
     private JwtDecoder jwtDecoder;
@@ -48,7 +45,7 @@ class AuthenticationControllerIT {
         var email = "test_user@hmanger.com.br";
         var password = "Test%password0";
 
-        this.createUser(email, password);
+        this.authenticationTestUtils.createUser(email, password);
 
         Response response = given().basePath("/auth/token")
                 .port(port)
@@ -67,11 +64,6 @@ class AuthenticationControllerIT {
         assertThat(jwt.getExpiresAt()).isAfter(Instant.now());
     }
 
-    private void createUser(String email, String password) {
-        User user = User.create("Joe", "Jho", email, password, "MANAGER");
-        this.jpaUserRepository.save(UserModel.from(user));
-    }
-
     @ParameterizedTest()
     @ValueSource(booleans = {true, false})
     @DisplayName("Should be return Unauthorized http status on authenticate with wrong email or password")
@@ -79,7 +71,7 @@ class AuthenticationControllerIT {
         var email = "test_user@hmanger.com.br";
         var password = "Test%password0";
 
-        this.createUser(email, password);
+        this.authenticationTestUtils.createUser(email, password);
 
         if (wrongEmail) {
             email = "wrong@hmanager.com.br";
