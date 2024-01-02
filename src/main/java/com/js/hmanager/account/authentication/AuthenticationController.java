@@ -1,6 +1,9 @@
 package com.js.hmanager.account.authentication;
 
+import jakarta.servlet.ServletException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -16,12 +19,18 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/login")
 public class AuthenticationController {
+    private final AuthenticationProvider authenticationProvider;
     private final JwtEncoder jwtEncoder;
 
-    @PostMapping("/token")
-    public AuthenticationTokenResponse generateToken(Authentication authentication) {
+    @PostMapping
+    public AuthenticationTokenResponse generateToken(LoginDto loginDto) throws ServletException {
+        Authentication authentication = this.authenticationProvider.authenticate(
+                new UsernamePasswordAuthenticationToken(loginDto.username(), loginDto.password())
+        );
+
+
         Instant now = Instant.now();
         long expiry = 36000L;
 

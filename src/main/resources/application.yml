@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_DB}?createDatabaseIfNotExist=true&serverTimezone=UTC
-    username: ${DATABASE_USER_NAME}
-    password: ${DATABASE_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/hmanager?createDatabaseIfNotExist=true&serverTimezone=UTC
+    username: local_user
+    password: local_password
 
   jpa:
     hibernate:
@@ -21,4 +21,6 @@ auth:
     jks-location: classpath:/keystore/hmanager.jks
     pass: asdf123
     key-alias: hmanager_jwt
-
+logging:
+  level:
+    web: debug
