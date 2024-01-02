@@ -21,7 +21,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.preemptive;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -42,13 +41,7 @@ class RoomControllerIT {
         flyway.clean();
         flyway.migrate();
 
-        var email = "test@hmanager.com.br";
-        var password = "TestPassword%0";
-
-
-        this.authenticationTestUtils.createUser(email, password);
-
-        RestAssured.authentication = preemptive().basic(email, password);
+        RestAssured.authentication = this.authenticationTestUtils.getAuthentication(port);
     }
 
     @AfterAll

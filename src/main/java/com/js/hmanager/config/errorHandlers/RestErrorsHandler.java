@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -40,6 +41,12 @@ public class RestErrorsHandler {
     public ResponseEntity<ProblemDetail> handleAll(RuntimeException ex, WebRequest req) {
         this.logger.warn(ex.getMessage());
         return makeErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex, req);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ProblemDetail> handleUnauthorized(RuntimeException ex, WebRequest req) {
+        this.logger.info(ex.getMessage());
+        return makeErrorResponse(HttpStatus.UNAUTHORIZED, ex, req);
     }
 
     private ResponseEntity<ProblemDetail> makeErrorResponse(HttpStatus status, RuntimeException ex, WebRequest req) {

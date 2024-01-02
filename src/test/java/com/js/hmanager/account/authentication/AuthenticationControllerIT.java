@@ -47,9 +47,10 @@ class AuthenticationControllerIT {
 
         this.authenticationTestUtils.createUser(email, password);
 
-        Response response = given().basePath("/auth/token")
+        Response response = given().basePath("/login")
                 .port(port)
-                .auth().preemptive().basic(email, password)
+                .formParam("username", email)
+                .formParam("password", password)
                 .when()
                 .post();
 

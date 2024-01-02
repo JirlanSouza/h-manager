@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/hmanager?createDatabaseIfNotExist=true&serverTimezone=UTC
+    url: jdbc:postgresql://localhost:5432/hmanager-test?createDatabaseIfNotExist=true&serverTimezone=UTC
     username: local_user
     password: local_password
 
