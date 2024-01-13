@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-@Service
+//@Service
 public class DatabaseUserDetailsService implements UserDetailsService {
     private final Logger logger = LoggerFactory.getLogger(DatabaseUserDetailsService.class);
 

@@ -18,8 +18,8 @@ import java.time.Instant;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-@RestController
-@RequestMapping("/login")
+//@RestController
+//@RequestMapping("/login")
 public class AuthenticationController {
     private final AuthenticationProvider authenticationProvider;
     private final JwtEncoder jwtEncoder;
