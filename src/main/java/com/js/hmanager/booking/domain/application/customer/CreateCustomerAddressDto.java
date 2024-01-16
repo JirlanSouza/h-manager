@@ -1,4 +1,4 @@
-package com.js.hmanager.booking.domain.application.comands;
+package com.js.hmanager.booking.domain.application.customer;
 
 import com.js.hmanager.booking.domain.model.customer.Address;
 

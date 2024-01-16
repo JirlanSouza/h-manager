@@ -1,28 +1,25 @@
-package com.js.hmanager.booking.domain.application.comandHandlers;
+package com.js.hmanager.booking.domain.application.customer;
 
-import com.js.hmanager.booking.domain.application.comands.CreateCustomerCommand;
 import com.js.hmanager.booking.domain.model.customer.Cpf;
 import com.js.hmanager.booking.domain.model.customer.Customer;
 import com.js.hmanager.booking.domain.model.customer.CustomerRepository;
 import com.js.hmanager.common.domainExceptions.ConflictEntityDomainException;
-import org.axonframework.commandhandling.CommandHandler;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
-public class CreateCustomerHandler {
+public class CreateCustomer {
 
     String id;
     private final CustomerRepository customerRepository;
 
-    public CreateCustomerHandler(CustomerRepository customerRepository) {
+    public CreateCustomer(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
 
-    @CommandHandler
-    public UUID handle(CreateCustomerCommand command) {
-        Cpf customerCpf = new Cpf(command.cpf());
+    public UUID execute(CreateCustomerDto customerData) {
+        Cpf customerCpf = new Cpf(customerData.cpf());
         boolean existsCustomer = customerRepository.existsByCpf(customerCpf);
 
         if (existsCustomer) {
@@ -32,11 +29,11 @@ public class CreateCustomerHandler {
         }
 
         Customer customer = new Customer(
-                command.name(),
+                customerData.name(),
                 customerCpf,
-                command.email(),
-                command.telephone(),
-                command.address().toDomainAddress()
+                customerData.email(),
+                customerData.telephone(),
+                customerData.address().toDomainAddress()
         );
 
         customerRepository.save(customer);

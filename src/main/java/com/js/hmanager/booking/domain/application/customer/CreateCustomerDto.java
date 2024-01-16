@@ -1,10 +1,10 @@
-package com.js.hmanager.booking.domain.application.comands;
+package com.js.hmanager.booking.domain.application.customer;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public record CreateCustomerCommand(
+public record CreateCustomerDto(
         @NotBlank
         @Size(min = 3, max = 70)
         String name,

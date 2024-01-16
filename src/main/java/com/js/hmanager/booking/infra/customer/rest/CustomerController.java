@@ -1,6 +1,6 @@
 package com.js.hmanager.booking.infra.customer.rest;
 
-import com.js.hmanager.booking.domain.application.comands.CreateCustomerCommand;
+import com.js.hmanager.booking.domain.application.customer.CreateCustomerDto;
 import jakarta.validation.Valid;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ public class CustomerController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UUID createCustomer(@RequestBody @Valid CreateCustomerCommand command) {
+    public UUID createCustomer(@RequestBody @Valid CreateCustomerDto command) {
         return commandGateway.<UUID>sendAndWait(command);
     }
 }

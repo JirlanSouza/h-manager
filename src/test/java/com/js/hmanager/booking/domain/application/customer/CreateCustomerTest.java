@@ -1,7 +1,5 @@
-package com.js.hmanager.booking.domain.application.comandHandlers;
+package com.js.hmanager.booking.domain.application.customer;
 
-import com.js.hmanager.booking.domain.application.comands.CreateCustomerAddressDto;
-import com.js.hmanager.booking.domain.application.comands.CreateCustomerCommand;
 import com.js.hmanager.booking.domain.model.customer.Cpf;
 import com.js.hmanager.booking.domain.model.customer.Customer;
 import com.js.hmanager.booking.domain.model.customer.CustomerRepository;
@@ -18,18 +16,18 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class CreateCustomerHandlerTest {
+class CreateCustomerTest {
 
     @Mock
     CustomerRepository customerRepository;
 
     @InjectMocks
-    CreateCustomerHandler createCustomerHandler;
+    CreateCustomer createCustomer;
 
     @Test
     @DisplayName("Should create a new customer")
     void createNewCustomer() {
-        CreateCustomerCommand command = new CreateCustomerCommand(
+        CreateCustomerDto command = new CreateCustomerDto(
                 "Joe jho", "111.444.777-35", "joejho@hmanager.com", "1296969696",
                 new CreateCustomerAddressDto(
                         "test street",
@@ -44,7 +42,7 @@ class CreateCustomerHandlerTest {
 
         when(customerRepository.existsByCpf(isA(Cpf.class))).thenReturn(false);
 
-        UUID customerId = createCustomerHandler.handle(command);
+        UUID customerId = createCustomer.execute(command);
 
         assertNotNull(customerId);
         verify(customerRepository, times(1)).save(isA(Customer.class));
