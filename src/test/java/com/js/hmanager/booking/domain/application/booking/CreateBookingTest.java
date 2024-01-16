@@ -1,7 +1,6 @@
-package com.js.hmanager.booking.domain.application.comandHandlers;
+package com.js.hmanager.booking.domain.application.booking;
 
 import com.js.hmanager.booking.domain.application.adapters.InventoryService;
-import com.js.hmanager.booking.domain.application.comands.CreateBookingCommand;
 import com.js.hmanager.booking.domain.model.booking.Booking;
 import com.js.hmanager.booking.domain.model.booking.BookingRepository;
 import com.js.hmanager.booking.domain.model.booking.Room;
@@ -25,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class CreateBookingHandlerTest {
+class CreateBookingTest {
 
     @Mock
     private BookingRepository bookingRepository;
@@ -37,12 +36,12 @@ class CreateBookingHandlerTest {
     InventoryService inventoryService;
 
     @InjectMocks
-    private CreateBookingHandler createBookingHandler;
+    private CreateBooking createBookingHandler;
 
     @Test
     @DisplayName("Should create a new booking")
     void createNewBooking() {
-        CreateBookingCommand command = new CreateBookingCommand(
+        CreateBookingDto command = new CreateBookingDto(
                 UUID.randomUUID(),
                 OffsetDateTime.now(),
                 OffsetDateTime.now().plusDays(2),
@@ -53,7 +52,7 @@ class CreateBookingHandlerTest {
         when(inventoryService.findRooms(anyList()))
                 .thenReturn(List.of(new Room("1001", new BigDecimal("220.99"))));
 
-        UUID bookingId = createBookingHandler.handle(command);
+        UUID bookingId = createBookingHandler.execute(command);
 
         assertNotNull(bookingId);
         verify(bookingRepository, only()).save(isA(Booking.class));
@@ -62,20 +61,20 @@ class CreateBookingHandlerTest {
     @Test
     @DisplayName("Should throw NotFoundEntityDomainException when creating a booking with a no existent customer")
     void createBookingWithNonexistentCustomer() {
-        CreateBookingCommand command = new CreateBookingCommand(
+        CreateBookingDto command = new CreateBookingDto(
                 UUID.randomUUID(),
                 OffsetDateTime.now(),
                 OffsetDateTime.now().plusDays(2),
                 List.of(UUID.randomUUID())
         );
 
-        assertThrows(NotFoundEntityDomainException.class, () -> createBookingHandler.handle(command));
+        assertThrows(NotFoundEntityDomainException.class, () -> createBookingHandler.execute(command));
     }
 
     @Test
     @DisplayName("Should throw InvalidArgumentDomain exception when creating a booking with an empty room list")
     void createBookingWithEmptyRoomList() {
-        CreateBookingCommand command = new CreateBookingCommand(
+        CreateBookingDto command = new CreateBookingDto(
                 UUID.randomUUID(),
                 OffsetDateTime.now(),
                 OffsetDateTime.now().plusDays(2),
@@ -84,6 +83,6 @@ class CreateBookingHandlerTest {
 
         when(customerRepository.exists(isA(UUID.class))).thenReturn(true);
 
-        assertThrows(InvalidArgumentDomainException.class, () -> createBookingHandler.handle(command));
+        assertThrows(InvalidArgumentDomainException.class, () -> createBookingHandler.execute(command));
     }
 }
