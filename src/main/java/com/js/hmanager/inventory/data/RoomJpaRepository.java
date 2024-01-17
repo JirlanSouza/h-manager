@@ -1,7 +1,7 @@
-package com.js.hmanager.inventory.infra.data;
+package com.js.hmanager.inventory.data;
 
-import com.js.hmanager.inventory.domain.model.room.Room;
-import com.js.hmanager.inventory.domain.model.room.RoomRepository;
+import com.js.hmanager.inventory.domain.Room;
+import com.js.hmanager.inventory.domain.RoomRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

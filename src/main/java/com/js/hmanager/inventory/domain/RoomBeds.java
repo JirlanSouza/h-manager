@@ -1,4 +1,4 @@
-package com.js.hmanager.inventory.domain.model.room;
+package com.js.hmanager.inventory.domain;
 
 import com.js.hmanager.common.domainExceptions.InvalidArgumentDomainException;
 

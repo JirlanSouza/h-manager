@@ -1,8 +1,8 @@
-package com.js.hmanager.inventory.infra.rest;
+package com.js.hmanager.inventory.rest;
 
 import com.js.hmanager.account.authentication.AuthenticationTestUtils;
-import com.js.hmanager.inventory.infra.data.RoomJpaRepository;
-import com.js.hmanager.inventory.infra.data.RoomModel;
+import com.js.hmanager.inventory.data.RoomJpaRepository;
+import com.js.hmanager.inventory.data.RoomModel;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;

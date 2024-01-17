@@ -13,9 +13,6 @@ server:
   error:
     include-stacktrace: never
 
-axon:
-  axonserver:
-    enabled: false
 auth:
   keystore:
     jks-location: classpath:/keystore/hmanager.jks
@@ -23,8 +20,8 @@ auth:
     key-alias: hmanager_jwt
 logging:
   level:
-    web: trace
+    web: info
     org:
       springframework:
-        web: trace
-        security: trace
+        web: info
+        security: info

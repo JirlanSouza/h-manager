@@ -1,11 +1,11 @@
-package com.js.hmanager.inventory.domain.application.commands;
+package com.js.hmanager.inventory.application;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-public record CreateRoomCommand(
+public record CreateRoomDto(
         @NotBlank
         String number,
 

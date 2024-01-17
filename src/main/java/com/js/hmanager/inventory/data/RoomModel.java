@@ -1,4 +1,4 @@
-package com.js.hmanager.inventory.infra.data;
+package com.js.hmanager.inventory.data;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
