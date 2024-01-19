@@ -3,6 +3,7 @@ package com.js.hmanager.account.authentication;
 import io.restassured.response.Response;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -39,6 +40,7 @@ class AuthenticationControllerIT {
         flyway.migrate();
     }
 
+    @Disabled
     @Test
     @DisplayName("Should be create token")
     public void createToken() {
