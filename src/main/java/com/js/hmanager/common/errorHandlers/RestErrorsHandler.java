@@ -1,4 +1,4 @@
-package com.js.hmanager.config.errorHandlers;
+package com.js.hmanager.common.errorHandlers;
 
 import com.js.hmanager.common.domainExceptions.ConflictEntityDomainException;
 import com.js.hmanager.common.domainExceptions.InvalidArgumentDomainException;
