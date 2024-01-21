@@ -27,7 +27,7 @@ class BookingTest {
         ArrayList<Room> rooms = new ArrayList<>();
         BigDecimal totalPrice = new BigDecimal(0);
 
-        Booking booking = Booking.restore(id, checkIn, checkOut, rooms, totalPrice, BookingStatus.CREATED);
+        Booking booking = Booking.restore(id, checkIn, checkOut, rooms, BookingStatus.CREATED, totalPrice);
 
         assertEquals(booking.getId(), id);
         assertEquals(booking.getCheckInDate(), checkIn);

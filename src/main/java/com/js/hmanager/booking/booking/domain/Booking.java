@@ -20,8 +20,8 @@ public class Booking {
     private OffsetDateTime checkInDate;
     private OffsetDateTime checkOutDate;
     private List<Room> roms;
-    private BigDecimal totalPrice;
     private BookingStatus status;
+    private BigDecimal totalPrice;
 
     public Booking(OffsetDateTime checkIn, OffsetDateTime checkOut, List<Room> rooms) {
         if (rooms.isEmpty()) throw new InvalidArgumentDomainException("The rooms list must have one or more rooms");
@@ -30,6 +30,7 @@ public class Booking {
         this.checkInDate = checkIn;
         this.checkOutDate = checkOut;
         this.roms = rooms;
+        this.status = BookingStatus.CREATED;
         this.totalPrice = BigDecimal.ZERO;
     }
 
@@ -38,10 +39,10 @@ public class Booking {
             OffsetDateTime checkIn,
             OffsetDateTime checkOut,
             List<Room> roms,
-            BigDecimal totalPrice,
-            BookingStatus status
+            BookingStatus status,
+            BigDecimal totalPrice
     ) {
-        return new Booking(id, checkIn, checkOut, roms, totalPrice, status);
+        return new Booking(id, checkIn, checkOut, roms, status, totalPrice);
     }
 
     public void addRoom(Room room) {
