@@ -1,14 +1,17 @@
 package com.js.hmanager.inventory.data;
 
+import com.js.hmanager.booking.booking.application.adapters.InventoryService;
 import com.js.hmanager.inventory.domain.Room;
 import com.js.hmanager.inventory.domain.RoomRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface RoomJpaRepository extends JpaRepository<RoomModel, UUID>, RoomRepository {
+public interface RoomJpaRepository extends JpaRepository<RoomModel, UUID>, RoomRepository, InventoryService {
     boolean existsByNumber(String roomNumber);
 
     @Override
@@ -23,4 +26,15 @@ public interface RoomJpaRepository extends JpaRepository<RoomModel, UUID>, RoomR
                 .build()
         );
     }
+
+    @Override
+    @Query("""
+        select new com.js.hmanager.booking.booking.domain.Room(
+                r.id,
+                r.number,
+                r.dailyRate
+            )
+        from RoomModel as r where r.id in :roomIds
+        """)
+    List<com.js.hmanager.booking.booking.domain.Room> findRooms(List<UUID> roomIds);
 }
