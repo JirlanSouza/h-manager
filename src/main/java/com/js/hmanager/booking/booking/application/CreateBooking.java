@@ -3,13 +3,15 @@ package com.js.hmanager.booking.booking.application;
 import com.js.hmanager.booking.booking.application.adapters.InventoryService;
 import com.js.hmanager.booking.booking.domain.Booking;
 import com.js.hmanager.booking.booking.domain.BookingRepository;
-import com.js.hmanager.booking.booking.domain.Room;
+import com.js.hmanager.booking.booking.domain.BookingRoom;
 import com.js.hmanager.booking.customer.domain.CustomerRepository;
 import com.js.hmanager.common.domainExceptions.NotFoundEntityDomainException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Service
 public class CreateBooking {
     private final BookingRepository bookingRepository;
     private final CustomerRepository customerRepository;
@@ -34,7 +36,7 @@ public class CreateBooking {
             );
         }
 
-        List<Room> rooms = inventoryService.findRooms(bookingData.roomIds());
+        List<BookingRoom> rooms = inventoryService.findRooms(bookingData.roomIds());
         Booking booking = new Booking(bookingData.checkinDate(), bookingData.checkoutDate(), rooms);
 
         bookingRepository.save(booking);

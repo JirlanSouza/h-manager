@@ -19,11 +19,11 @@ public class Booking {
     private final UUID id;
     private OffsetDateTime checkInDate;
     private OffsetDateTime checkOutDate;
-    private List<Room> roms;
+    private List<BookingRoom> roms;
     private BookingStatus status;
     private BigDecimal totalPrice;
 
-    public Booking(OffsetDateTime checkIn, OffsetDateTime checkOut, List<Room> rooms) {
+    public Booking(OffsetDateTime checkIn, OffsetDateTime checkOut, List<BookingRoom> rooms) {
         if (rooms.isEmpty()) throw new InvalidArgumentDomainException("The rooms list must have one or more rooms");
 
         this.id = UUID.randomUUID();
@@ -38,14 +38,14 @@ public class Booking {
             UUID id,
             OffsetDateTime checkIn,
             OffsetDateTime checkOut,
-            List<Room> roms,
+            List<BookingRoom> roms,
             BookingStatus status,
             BigDecimal totalPrice
     ) {
         return new Booking(id, checkIn, checkOut, roms, status, totalPrice);
     }
 
-    public void addRoom(Room room) {
+    public void addRoom(BookingRoom room) {
         this.roms.add(room);
     }
 
@@ -89,7 +89,7 @@ public class Booking {
         long daysOfStay = calculateDaysOfStay();
         totalPrice = BigDecimal.ZERO;
 
-        for (Room r : roms) {
+        for (BookingRoom r : roms) {
             totalPrice = totalPrice.add(r.getDailyRate().multiply(BigDecimal.valueOf(daysOfStay)));
         }
     }
