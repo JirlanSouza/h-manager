@@ -22,6 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -137,13 +138,15 @@ class BookingControllerIT {
     void createBookingWithNonExistentRooms() {
         UUID customerId = this.createCustomerIntoDatabase();
 
-        UUID roomId = UUID.randomUUID();
+        List<UUID> roomsIds = new ArrayList<>(this.createRoomsIntoDatabase());
+        roomsIds.add(UUID.randomUUID());
+
 
         CreateBookingDto bookingDto = new CreateBookingDto(
                 customerId,
                 OffsetDateTime.now().plusDays(6),
                 OffsetDateTime.now().plusDays(10),
-                List.of(roomId)
+                roomsIds
         );
 
         Response response = given().basePath("/bookings")
@@ -162,7 +165,7 @@ class BookingControllerIT {
             ProblemDetail responseBody = response.body().as(ProblemDetail.class);
 
             softly.assertThat(responseBody.getDetail()).as("Response problem detail message")
-                    .isEqualTo("The rooms withs ids: %s does not exists".formatted(roomId));
+                    .isEqualTo("The rooms withs ids: %s does not exists".formatted(roomsIds.get(1)));
 
         });
     }
