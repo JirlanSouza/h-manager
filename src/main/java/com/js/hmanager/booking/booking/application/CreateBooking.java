@@ -37,10 +37,32 @@ public class CreateBooking {
         }
 
         List<BookingRoom> rooms = inventoryService.findRooms(bookingData.roomIds());
+        this.validateAllRoomsExists(rooms, bookingData.roomIds());
+
         Booking booking = new Booking(bookingData.checkinDate(), bookingData.checkoutDate(), rooms);
 
         bookingRepository.save(booking);
 
         return booking.getId();
+    }
+
+    private void validateAllRoomsExists(List<BookingRoom> rooms, List<UUID> roomsIds) {
+        if (rooms.size() == roomsIds.size()) {
+            return;
+        }
+
+        StringBuilder builder = new StringBuilder();
+
+        roomsIds.stream()
+                .filter(
+                        roomId -> rooms.stream()
+                                .noneMatch(room -> room.getId().equals(roomId))
+                ).forEach(roomId -> builder.append(roomId).append(", "));
+
+        builder.delete(builder.length() - 2, builder.length() - 1);
+
+        throw new NotFoundEntityDomainException(
+                "The rooms withs ids: %s does not exists".formatted(builder.toString().trim())
+        );
     }
 }

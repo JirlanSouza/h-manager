@@ -9,6 +9,7 @@ import com.js.hmanager.inventory.data.RoomModel;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.assertj.core.api.SoftAssertions;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.ProblemDetail;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
@@ -128,5 +130,40 @@ class BookingControllerIT {
                 .when().post();
 
         assertThat(response.statusCode()).as("Status code is 404 - NOT FOUND").isEqualTo(404);
+    }
+
+    @Test
+    @DisplayName("Should return 404 NOT FOUND status code when create booking with non existent rooms")
+    void createBookingWithNonExistentRooms() {
+        UUID customerId = this.createCustomerIntoDatabase();
+
+        UUID roomId = UUID.randomUUID();
+
+        CreateBookingDto bookingDto = new CreateBookingDto(
+                customerId,
+                OffsetDateTime.now().plusDays(6),
+                OffsetDateTime.now().plusDays(10),
+                List.of(roomId)
+        );
+
+        Response response = given().basePath("/bookings")
+                .port(port)
+                .contentType(ContentType.JSON)
+                .body(bookingDto)
+                .when().post();
+
+        assertThat(response.statusCode()).as("Status code is 404 - NOT FOUND").isEqualTo(404);
+
+
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(response.body().as(ProblemDetail.class)).as("Body has the a problem detail")
+                    .isInstanceOf(ProblemDetail.class);
+
+            ProblemDetail responseBody = response.body().as(ProblemDetail.class);
+
+            softly.assertThat(responseBody.getDetail()).as("Response problem detail message")
+                    .isEqualTo("The rooms withs ids: %s does not exists".formatted(roomId));
+
+        });
     }
 }
