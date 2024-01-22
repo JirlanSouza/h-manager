@@ -2,6 +2,7 @@ package com.js.hmanager.common.errorHandlers;
 
 import com.js.hmanager.common.domainExceptions.ConflictEntityDomainException;
 import com.js.hmanager.common.domainExceptions.InvalidArgumentDomainException;
+import com.js.hmanager.common.domainExceptions.NotFoundEntityDomainException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -20,9 +21,15 @@ public class RestErrorsHandler {
     private final Logger logger = LoggerFactory.getLogger(RestErrorsHandler.class);
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({InvalidArgumentDomainException.class,})
+    @ExceptionHandler(InvalidArgumentDomainException.class)
     public ResponseEntity<ProblemDetail> handleBadRequest(RuntimeException ex, WebRequest req) {
         return makeErrorResponse(HttpStatus.BAD_REQUEST, ex, req);
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundEntityDomainException.class)
+    public ResponseEntity<ProblemDetail> handleNoFound(RuntimeException ex, WebRequest req) {
+        return makeErrorResponse(HttpStatus.NOT_FOUND, ex, req);
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)

@@ -10,7 +10,6 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.flywaydb.core.Flyway;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -72,7 +71,7 @@ class BookingControllerIT {
         return customerModel.getId();
     }
 
-    private List<UUID> createRoomsIntoDataBase() {
+    private List<UUID> createRoomsIntoDatabase() {
         RoomModel roomModel = RoomModel.builder()
                 .id(UUID.randomUUID())
                 .number("1010")
@@ -91,7 +90,7 @@ class BookingControllerIT {
     @DisplayName("Should create new booking")
     void createBooking() {
         UUID customerId = this.createCustomerIntoDatabase();
-        List<UUID> roomsIds = this.createRoomsIntoDataBase();
+        List<UUID> roomsIds = this.createRoomsIntoDatabase();
 
         CreateBookingDto bookingDto = new CreateBookingDto(
                 customerId,
@@ -108,5 +107,26 @@ class BookingControllerIT {
 
         assertThat(response.statusCode()).as("Status code is 201 - CREATED").isEqualTo(201);
         assertThat(response.body().as(UUID.class)).as("Response body is UUID").isInstanceOf(UUID.class);
+    }
+
+    @Test
+    @DisplayName("Should return 404 NOT FOUND status code when create booking to non existent customer")
+    void createBookingToNonExistentCustomer() {
+        List<UUID> roomsIds = this.createRoomsIntoDatabase();
+
+        CreateBookingDto bookingDto = new CreateBookingDto(
+                UUID.randomUUID(),
+                OffsetDateTime.now().plusDays(6),
+                OffsetDateTime.now().plusDays(10),
+                roomsIds
+        );
+
+        Response response = given().basePath("/bookings")
+                .port(port)
+                .contentType(ContentType.JSON)
+                .body(bookingDto)
+                .when().post();
+
+        assertThat(response.statusCode()).as("Status code is 404 - NOT FOUND").isEqualTo(404);
     }
 }
