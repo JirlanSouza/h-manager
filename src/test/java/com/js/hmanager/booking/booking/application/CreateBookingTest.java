@@ -3,7 +3,7 @@ package com.js.hmanager.booking.booking.application;
 import com.js.hmanager.booking.booking.application.adapters.InventoryService;
 import com.js.hmanager.booking.booking.domain.Booking;
 import com.js.hmanager.booking.booking.domain.BookingRepository;
-import com.js.hmanager.booking.booking.domain.Room;
+import com.js.hmanager.booking.booking.domain.BookingRoom;
 import com.js.hmanager.booking.customer.domain.CustomerRepository;
 import com.js.hmanager.common.domainExceptions.InvalidArgumentDomainException;
 import com.js.hmanager.common.domainExceptions.NotFoundEntityDomainException;
@@ -50,7 +50,7 @@ class CreateBookingTest {
 
         when(customerRepository.exists(isA(UUID.class))).thenReturn(true);
         when(inventoryService.findRooms(anyList()))
-                .thenReturn(List.of(new Room("1001", new BigDecimal("220.99"))));
+                .thenReturn(List.of(new BookingRoom("1001", new BigDecimal("220.99"))));
 
         UUID bookingId = createBookingHandler.execute(command);
 
