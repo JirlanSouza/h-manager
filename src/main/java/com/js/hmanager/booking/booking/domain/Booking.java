@@ -24,7 +24,11 @@ public class Booking {
     private BigDecimal totalPrice;
 
     public Booking(OffsetDateTime checkIn, OffsetDateTime checkOut, List<BookingRoom> rooms) {
-        if (rooms.isEmpty()) throw new InvalidArgumentDomainException("The rooms list must have one or more rooms");
+        this.validateHostingPeriod(checkIn, checkOut);
+
+        if (rooms.isEmpty()) {
+            throw new InvalidArgumentDomainException("The rooms list must have one or more rooms");
+        }
 
         this.id = UUID.randomUUID();
         this.checkInDate = checkIn;
@@ -83,6 +87,17 @@ public class Booking {
 
         this.checkOutDate = newCheckOutDate;
         calculateTotalPrice();
+    }
+
+    private void validateHostingPeriod(OffsetDateTime checkInDate, OffsetDateTime checkOutDate) {
+        Period hostingPeriod = Period.between(
+                checkInDate.toLocalDate(),
+                checkOutDate.toLocalDate()
+        );
+
+        if (hostingPeriod.getDays() <= 0) {
+            throw new InvalidArgumentDomainException("The hosting period has to be more than 1 day");
+        }
     }
 
     private void calculateTotalPrice() {

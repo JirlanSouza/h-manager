@@ -1,5 +1,8 @@
 package com.js.hmanager.booking.booking.domain;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import com.js.hmanager.common.domainExceptions.InvalidArgumentDomainException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -8,6 +11,7 @@ import java.time.Month;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,6 +39,19 @@ class BookingTest {
         assertEquals(booking.getRoms().size(), rooms.size());
         assertEquals(booking.getTotalPrice(), totalPrice);
         assertEquals(booking.getStatus(), BookingStatus.CREATED);
+    }
+
+    @Test
+    @DisplayName("Should not create room with checkin after checkout date")
+    void roomWithCheckinAfterCheckoutDate() {
+        OffsetDateTime checkIn = makeDateTime(2023, Month.AUGUST, 6, 14, 0, ZoneOffset.UTC);
+        OffsetDateTime checkOut = makeDateTime(2023, Month.AUGUST, 5, 8, 30, ZoneOffset.UTC);
+        List<BookingRoom> rooms = List.of(new BookingRoom("1002", new BigDecimal("325.99")));
+
+
+        assertThatThrownBy(() -> new Booking(checkIn, checkOut, rooms))
+                .isInstanceOf(InvalidArgumentDomainException.class)
+                .hasMessage("The hosting period has to be more than 1 day");
     }
 
     @Test
