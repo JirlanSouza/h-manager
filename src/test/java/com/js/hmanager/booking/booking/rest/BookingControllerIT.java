@@ -169,4 +169,38 @@ class BookingControllerIT {
 
         });
     }
+
+    @Test
+    @DisplayName("Should return 400 BAD REQUEST status code when create booking with checkin date latter of checkout date")
+    void createBookingWithCheckinAfterCheckout() {
+        UUID customerId = this.createCustomerIntoDatabase();
+        List<UUID> roomsIds = this.createRoomsIntoDatabase();
+
+        CreateBookingDto bookingDto = new CreateBookingDto(
+                customerId,
+                OffsetDateTime.now().plusDays(4),
+                OffsetDateTime.now().plusDays(2),
+                roomsIds
+        );
+
+        Response response = given().basePath("/bookings")
+                .port(port)
+                .contentType(ContentType.JSON)
+                .body(bookingDto)
+                .when().post();
+
+        assertThat(response.statusCode()).as("Status code is 409 - BAD REQUEST").isEqualTo(400);
+
+
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(response.body().as(ProblemDetail.class)).as("Body has the a problem detail")
+                    .isInstanceOf(ProblemDetail.class);
+
+            ProblemDetail responseBody = response.body().as(ProblemDetail.class);
+
+            softly.assertThat(responseBody.getDetail()).as("Response problem detail message")
+                    .isEqualTo("The hosting period has to be more than 1 day");
+
+        });
+    }
 }
