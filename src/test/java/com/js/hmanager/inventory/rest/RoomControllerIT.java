@@ -1,6 +1,7 @@
 package com.js.hmanager.inventory.rest;
 
 import com.js.hmanager.account.authentication.AuthenticationTestUtils;
+import com.js.hmanager.common.AbstractApiTest;
 import com.js.hmanager.inventory.data.RoomJpaRepository;
 import com.js.hmanager.inventory.data.RoomModel;
 import io.restassured.RestAssured;
@@ -12,10 +13,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -24,11 +23,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
-class RoomControllerIT {
-    @LocalServerPort
-    private int port;
+class RoomControllerIT extends AbstractApiTest {
 
     @Autowired
     private AuthenticationTestUtils authenticationTestUtils;

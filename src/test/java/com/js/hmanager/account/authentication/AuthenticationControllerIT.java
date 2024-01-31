@@ -1,5 +1,6 @@
 package com.js.hmanager.account.authentication;
 
+import com.js.hmanager.common.AbstractApiTest;
 import io.restassured.response.Response;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,24 +10,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.time.Instant;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
-class AuthenticationControllerIT {
-
-    @LocalServerPort
-    private int port;
+class AuthenticationControllerIT extends AbstractApiTest {
 
     @Autowired
     private AuthenticationTestUtils authenticationTestUtils;

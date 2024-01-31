@@ -3,6 +3,7 @@ package com.js.hmanager.booking.customer.rest;
 import com.js.hmanager.account.authentication.AuthenticationTestUtils;
 import com.js.hmanager.booking.customer.data.CustomerJpaRepository;
 import com.js.hmanager.booking.customer.data.CustomerModel;
+import com.js.hmanager.common.AbstractApiTest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -12,10 +13,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -24,12 +23,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
-class CustomerControllerIT {
-
-    @LocalServerPort
-    private int port;
+class CustomerControllerIT extends AbstractApiTest {
 
     @Autowired
     private AuthenticationTestUtils authenticationTestUtils;
