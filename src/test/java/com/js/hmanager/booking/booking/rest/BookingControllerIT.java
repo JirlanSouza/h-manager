@@ -3,22 +3,20 @@ package com.js.hmanager.booking.booking.rest;
 import com.js.hmanager.account.authentication.AuthenticationTestUtils;
 import com.js.hmanager.booking.booking.application.CreateBookingDto;
 import com.js.hmanager.booking.customer.data.CustomerJpaRepository;
-import com.js.hmanager.booking.customer.data.CustomerModel;
 import com.js.hmanager.common.AbstractApiTest;
 import com.js.hmanager.inventory.data.RoomJpaRepository;
-import com.js.hmanager.inventory.data.RoomModel;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.assertj.core.api.SoftAssertions;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ProblemDetail;
 
-import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +36,9 @@ class BookingControllerIT extends AbstractApiTest {
     @Autowired
     RoomJpaRepository roomRepository;
 
+    @Autowired
+    BookingTestUtils bookingTestUtils;
+
     @BeforeEach
     void prepareDatabase(@Autowired Flyway flyway) {
         flyway.clean();
@@ -46,47 +47,11 @@ class BookingControllerIT extends AbstractApiTest {
         RestAssured.authentication = this.authenticationTestUtils.getAuthentication(port);
     }
 
-    private UUID createCustomerIntoDatabase() {
-        CustomerModel customerModel = CustomerModel.builder()
-                .id(UUID.randomUUID())
-                .name("Joe Jho")
-                .cpf("111.444.777-35")
-                .email("joejho@gmail.com")
-                .telephone("65985890067")
-                .addressStreet("Test street")
-                .addressNumber("999")
-                .addressNeighborhood("Test neighborhood")
-                .addressZipCode("12356-458")
-                .addressCity("Test city")
-                .addressState("Test state")
-                .addressCountry("Test country")
-                .build();
-
-        customerRepository.save(customerModel);
-
-        return customerModel.getId();
-    }
-
-    private List<UUID> createRoomsIntoDatabase() {
-        RoomModel roomModel = RoomModel.builder()
-                .id(UUID.randomUUID())
-                .number("1010")
-                .doubleBeds(1)
-                .singleBeds(0)
-                .dailyRate(BigDecimal.valueOf(220.00))
-                .available(true)
-                .build();
-
-        roomRepository.save(roomModel);
-
-        return List.of(roomModel.getId());
-    }
-
     @Test
     @DisplayName("Should create new booking")
     void createBooking() {
-        UUID customerId = this.createCustomerIntoDatabase();
-        List<UUID> roomsIds = this.createRoomsIntoDatabase();
+        UUID customerId = this.bookingTestUtils.createCustomerIntoDatabase();
+        List<UUID> roomsIds = this.bookingTestUtils.createRoomsIntoDatabase();
 
         CreateBookingDto bookingDto = new CreateBookingDto(
                 customerId,
@@ -108,7 +73,7 @@ class BookingControllerIT extends AbstractApiTest {
     @Test
     @DisplayName("Should return 404 NOT FOUND status code when create booking to non existent customer")
     void createBookingToNonExistentCustomer() {
-        List<UUID> roomsIds = this.createRoomsIntoDatabase();
+        List<UUID> roomsIds = this.bookingTestUtils.createRoomsIntoDatabase();
 
         CreateBookingDto bookingDto = new CreateBookingDto(
                 UUID.randomUUID(),
@@ -129,9 +94,9 @@ class BookingControllerIT extends AbstractApiTest {
     @Test
     @DisplayName("Should return 404 NOT FOUND status code when create booking with non existent rooms")
     void createBookingWithNonExistentRooms() {
-        UUID customerId = this.createCustomerIntoDatabase();
+        UUID customerId = this.bookingTestUtils.createCustomerIntoDatabase();
 
-        List<UUID> roomsIds = new ArrayList<>(this.createRoomsIntoDatabase());
+        List<UUID> roomsIds = new ArrayList<>(this.bookingTestUtils.createRoomsIntoDatabase());
         roomsIds.add(UUID.randomUUID());
 
 
@@ -166,8 +131,8 @@ class BookingControllerIT extends AbstractApiTest {
     @Test
     @DisplayName("Should return 400 BAD REQUEST status code when create booking with checkin date latter of checkout date")
     void createBookingWithCheckinAfterCheckout() {
-        UUID customerId = this.createCustomerIntoDatabase();
-        List<UUID> roomsIds = this.createRoomsIntoDatabase();
+        UUID customerId = this.bookingTestUtils.createCustomerIntoDatabase();
+        List<UUID> roomsIds = this.bookingTestUtils.createRoomsIntoDatabase();
 
         CreateBookingDto bookingDto = new CreateBookingDto(
                 customerId,
@@ -195,5 +160,12 @@ class BookingControllerIT extends AbstractApiTest {
                     .isEqualTo("The hosting period has to be more than 1 day");
 
         });
+    }
+
+    @Test
+    @Disabled("Should return 200 OK status code with list of bookings summary")
+    void listBookingsSummary() {
+        this.bookingTestUtils.createCustomerIntoDatabase();
+        this.bookingTestUtils.createRoomsIntoDatabase();
     }
 }
