@@ -13,8 +13,10 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 
@@ -51,32 +53,40 @@ public class BookingTestUtils {
         return customerModel.getId();
     }
 
-    public List<UUID> createRoomsIntoDatabase() {
-        RoomModel roomModel = RoomModel.builder()
-                .id(UUID.randomUUID())
-                .number("1010")
-                .doubleBeds(1)
-                .singleBeds(0)
-                .dailyRate(BigDecimal.valueOf(220.00))
-                .available(true)
-                .build();
+    public List<RoomModel> createRoomsIntoDatabase(int quantity) {
+        AtomicInteger roomNumber = new AtomicInteger(1);
+        List<RoomModel> roomModels = Stream.generate(() -> roomNumber.getAndIncrement() + 1000)
+                .limit(quantity)
+                .map(rn -> {
+                    return RoomModel.builder()
+                            .id(UUID.randomUUID())
+                            .number(rn.toString())
+                            .doubleBeds(1)
+                            .singleBeds(0)
+                            .dailyRate(BigDecimal.valueOf(220.00))
+                            .available(true)
+                            .build();
 
-        roomRepository.save(roomModel);
+                }).toList();
 
-        return List.of(roomModel.getId());
+        roomRepository.saveAll(roomModels);
+
+        return roomModels;
     }
 
     public List<BookingModel> createBookingsIntoDatabase() {
+        List<RoomModel> roomModels = createRoomsIntoDatabase(6);
+        List<BookingModel> bookingModels = new ArrayList<>();
 
-        List<BookingModel> bookingModels = Stream.generate(() -> {
-
-            List<UUID> roomsIds = createRoomsIntoDatabase();
+        for (int i = 0; i < 4; i++) {
             UUID bookingId = UUID.randomUUID();
-            List<BookingRoomModel> bookingRoomModels = roomsIds.stream()
-                    .map(roomId -> new BookingRoomModel(
+            List<BookingRoomModel> bookingRoomModels = roomModels.stream()
+                    .skip((i % 2 == 0 ? 1 : 2))
+                    .limit(i % 2 == 0 ? 1 : 2)
+                    .map(rm -> new BookingRoomModel(
                             UUID.randomUUID(),
-                            "1010",
-                            BigDecimal.valueOf(200.00),
+                            rm.getNumber(),
+                            rm.getDailyRate(),
                             bookingId
                     )).toList();
 
@@ -85,15 +95,15 @@ public class BookingTestUtils {
                 bookingTotalPrice = bookingTotalPrice.add(bookingRoomModel.getDailyRate());
             }
 
-            return new BookingModel(
+            bookingModels.add(new BookingModel(
                     bookingId,
                     OffsetDateTime.now().plusDays(5),
                     OffsetDateTime.now().plusDays(8),
                     bookingRoomModels,
                     bookingTotalPrice,
                     BookingStatus.CREATED
-            );
-        }).limit(4).toList();
+            ));
+        }
 
         bookingRepository.saveAll(bookingModels);
         return bookingModels;

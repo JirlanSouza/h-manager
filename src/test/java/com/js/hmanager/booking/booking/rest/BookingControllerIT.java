@@ -2,9 +2,11 @@ package com.js.hmanager.booking.booking.rest;
 
 import com.js.hmanager.account.authentication.AuthenticationTestUtils;
 import com.js.hmanager.booking.booking.application.CreateBookingDto;
+import com.js.hmanager.booking.booking.data.BookingModel;
 import com.js.hmanager.booking.customer.data.CustomerJpaRepository;
 import com.js.hmanager.common.AbstractApiTest;
 import com.js.hmanager.inventory.data.RoomJpaRepository;
+import com.js.hmanager.inventory.data.RoomModel;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -15,8 +17,11 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ProblemDetail;
 
+import java.awt.print.Pageable;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +56,8 @@ class BookingControllerIT extends AbstractApiTest {
     @DisplayName("Should create new booking")
     void createBooking() {
         UUID customerId = this.bookingTestUtils.createCustomerIntoDatabase();
-        List<UUID> roomsIds = this.bookingTestUtils.createRoomsIntoDatabase();
+        List<UUID> roomsIds = this.bookingTestUtils.createRoomsIntoDatabase(1).stream()
+                .map(RoomModel::getId).toList();
 
         CreateBookingDto bookingDto = new CreateBookingDto(
                 customerId,
@@ -73,7 +79,8 @@ class BookingControllerIT extends AbstractApiTest {
     @Test
     @DisplayName("Should return 404 NOT FOUND status code when create booking to non existent customer")
     void createBookingToNonExistentCustomer() {
-        List<UUID> roomsIds = this.bookingTestUtils.createRoomsIntoDatabase();
+        List<UUID> roomsIds = this.bookingTestUtils.createRoomsIntoDatabase(1).stream()
+                .map(RoomModel::getId).toList();
 
         CreateBookingDto bookingDto = new CreateBookingDto(
                 UUID.randomUUID(),
@@ -96,7 +103,8 @@ class BookingControllerIT extends AbstractApiTest {
     void createBookingWithNonExistentRooms() {
         UUID customerId = this.bookingTestUtils.createCustomerIntoDatabase();
 
-        List<UUID> roomsIds = new ArrayList<>(this.bookingTestUtils.createRoomsIntoDatabase());
+        List<UUID> roomsIds = new ArrayList<>(this.bookingTestUtils.createRoomsIntoDatabase(1).stream()
+                .map(RoomModel::getId).toList());
         roomsIds.add(UUID.randomUUID());
 
 
@@ -132,7 +140,8 @@ class BookingControllerIT extends AbstractApiTest {
     @DisplayName("Should return 400 BAD REQUEST status code when create booking with checkin date latter of checkout date")
     void createBookingWithCheckinAfterCheckout() {
         UUID customerId = this.bookingTestUtils.createCustomerIntoDatabase();
-        List<UUID> roomsIds = this.bookingTestUtils.createRoomsIntoDatabase();
+        List<UUID> roomsIds = this.bookingTestUtils.createRoomsIntoDatabase(1).stream()
+                .map(RoomModel::getId).toList();
 
         CreateBookingDto bookingDto = new CreateBookingDto(
                 customerId,
@@ -165,7 +174,13 @@ class BookingControllerIT extends AbstractApiTest {
     @Test
     @Disabled("Should return 200 OK status code with list of bookings summary")
     void listBookingsSummary() {
-        this.bookingTestUtils.createCustomerIntoDatabase();
-        this.bookingTestUtils.createRoomsIntoDatabase();
+        List<BookingModel> bookings = this.bookingTestUtils.createBookingsIntoDatabase();
+
+        Response response = given().basePath("/bookings")
+                .port(port)
+                .accept(ContentType.JSON)
+                .when().get();
+
+        assertThat(response.statusCode()).as("Status code is 200 - OK").isEqualTo(200);
     }
 }
