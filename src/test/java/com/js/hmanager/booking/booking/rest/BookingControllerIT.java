@@ -171,7 +171,7 @@ class BookingControllerIT extends AbstractApiTest {
     }
 
     @Test
-    @DisplayName("Should return 200 OK status code with list of bookings summary")
+    @DisplayName("Should return 200 OK status code with page of bookings summary")
     void listBookingsSummary() {
         List<BookingModel> bookings = this.bookingTestUtils.createBookingsIntoDatabase();
 
