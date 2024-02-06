@@ -15,7 +15,6 @@ import io.restassured.response.Response;
 import org.assertj.core.api.SoftAssertions;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -194,6 +193,25 @@ class BookingControllerIT extends AbstractApiTest {
             softly.assertThat(data.get(0).roomsAmount()).as("Is equals roomsAmount").isEqualTo(bookings.get(0).getRoms().size());
             softly.assertThat(data.get(0).status()).as("Is equals status").isEqualTo(bookings.get(0).getStatus());
             softly.assertThat(data.get(0).totalPrice()).as("Is equals totalPrice").isEqualTo(bookings.get(0).getTotalPrice());
+        });
+    }
+
+    @Test
+    @DisplayName("Should return 200 OK status code with empty page of bookings summary")
+    void listEmptyPageOfBookingsSummary() {
+        Response response = given().basePath("/bookings")
+                .port(port)
+                .accept(ContentType.JSON)
+                .when().get();
+
+        assertThat(response.statusCode()).as("Status code is 200 - OK").isEqualTo(200);
+
+        SoftAssertions.assertSoftly(softly -> {
+            DataPage<BookingSummary> dataPage = response.body().<DataPage<BookingSummary>>as(DataPage.class);
+            softly.assertThat(dataPage.totalItems()).as("Page totalItems is 0").isEqualTo(0);
+
+            List<BookingSummary> data = response.body().jsonPath().getList("data", BookingSummary.class);
+            softly.assertThat(data.isEmpty()).as("Page data is empty").isTrue();
         });
     }
 }
