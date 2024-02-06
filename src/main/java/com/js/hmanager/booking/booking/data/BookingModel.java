@@ -4,6 +4,7 @@ import com.js.hmanager.booking.booking.domain.Booking;
 import com.js.hmanager.booking.booking.domain.BookingStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
@@ -11,6 +12,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity

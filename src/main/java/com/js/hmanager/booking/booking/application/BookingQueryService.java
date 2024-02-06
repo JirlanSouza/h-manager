@@ -1,7 +1,7 @@
 package com.js.hmanager.booking.booking.application;
 
 import com.js.hmanager.booking.booking.data.BookingQueryRepository;
-import org.springframework.data.domain.Page;
+import com.js.hmanager.common.data.DataPage;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -13,14 +13,7 @@ public class BookingQueryService {
         this.bookingQueryRepository = bookingQueryRepository;
     }
 
-    public Page<BookingSummary> getBookingsSummary(Pageable pageable) {
-        try {
+    public DataPage<BookingSummary> getBookingsSummary(Pageable pageable) {
         return this.bookingQueryRepository.listSummary(pageable);
-
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-
-        return null;
     }
 }

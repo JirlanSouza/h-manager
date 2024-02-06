@@ -1,10 +1,12 @@
 package com.js.hmanager.booking.booking.rest;
 
 import com.js.hmanager.account.authentication.AuthenticationTestUtils;
+import com.js.hmanager.booking.booking.application.BookingSummary;
 import com.js.hmanager.booking.booking.application.CreateBookingDto;
 import com.js.hmanager.booking.booking.data.BookingModel;
 import com.js.hmanager.booking.customer.data.CustomerJpaRepository;
 import com.js.hmanager.common.AbstractApiTest;
+import com.js.hmanager.common.data.DataPage;
 import com.js.hmanager.inventory.data.RoomJpaRepository;
 import com.js.hmanager.inventory.data.RoomModel;
 import io.restassured.RestAssured;
@@ -17,11 +19,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ProblemDetail;
 
-import java.awt.print.Pageable;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -172,7 +171,7 @@ class BookingControllerIT extends AbstractApiTest {
     }
 
     @Test
-    @Disabled("Should return 200 OK status code with list of bookings summary")
+    @DisplayName("Should return 200 OK status code with list of bookings summary")
     void listBookingsSummary() {
         List<BookingModel> bookings = this.bookingTestUtils.createBookingsIntoDatabase();
 
@@ -182,5 +181,19 @@ class BookingControllerIT extends AbstractApiTest {
                 .when().get();
 
         assertThat(response.statusCode()).as("Status code is 200 - OK").isEqualTo(200);
+
+        SoftAssertions.assertSoftly(softly -> {
+            DataPage<BookingSummary> dataPage = response.body().<DataPage<BookingSummary>>as(DataPage.class);
+            softly.assertThat(dataPage.totalItems()).isEqualTo(bookings.size());
+
+            List<BookingSummary> data = response.body().jsonPath().getList("data", BookingSummary.class);
+
+            softly.assertThat(data.get(0).id()).as("Is equals ids").isEqualTo(bookings.get(0).getId());
+            softly.assertThat(data.get(0).checkInDate()).as("Is equals checkInDate").isEqualTo(bookings.get(0).getCheckInDate());
+            softly.assertThat(data.get(0).checkOutDate()).as("Is equals checkOutDate").isEqualTo(bookings.get(0).getCheckOutDate());
+            softly.assertThat(data.get(0).roomsAmount()).as("Is equals roomsAmount").isEqualTo(bookings.get(0).getRoms().size());
+            softly.assertThat(data.get(0).status()).as("Is equals status").isEqualTo(bookings.get(0).getStatus());
+            softly.assertThat(data.get(0).totalPrice()).as("Is equals totalPrice").isEqualTo(bookings.get(0).getTotalPrice());
+        });
     }
 }

@@ -4,6 +4,7 @@ import com.js.hmanager.booking.booking.application.BookingQueryService;
 import com.js.hmanager.booking.booking.application.BookingSummary;
 import com.js.hmanager.booking.booking.application.CreateBooking;
 import com.js.hmanager.booking.booking.application.CreateBookingDto;
+import com.js.hmanager.common.data.DataPage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ public class BookingController {
     }
 
     @GetMapping
-    public Page<BookingSummary> getBookingsSummary(Pageable pageable) {
+    public DataPage<BookingSummary> getBookingsSummary(Pageable pageable) {
         return this.bookingQueryService.getBookingsSummary(pageable);
     }
 }

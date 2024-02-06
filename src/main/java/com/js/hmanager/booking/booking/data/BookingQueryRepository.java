@@ -1,6 +1,7 @@
 package com.js.hmanager.booking.booking.data;
 
 import com.js.hmanager.booking.booking.application.BookingSummary;
+import com.js.hmanager.common.data.DataPage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -13,15 +14,19 @@ import java.util.UUID;
 public interface BookingQueryRepository extends PagingAndSortingRepository<BookingModel, UUID> {
 
     @Query("""
-            select new com.js.hmanager.booking.booking.application.BookingSummary(
-                b.id,
-                b.checkInDate,
-                b.checkOutDate,
-                SIZE(b.roms),
-                b.status,
-                b.totalPrice
-            )
-            from BookingModel as b
-        """)
-    Page<BookingSummary> listSummary(Pageable pageable);
+                select new com.js.hmanager.booking.booking.application.BookingSummary(
+                    b.id,
+                    b.checkInDate,
+                    b.checkOutDate,
+                    SIZE(b.roms),
+                    b.status,
+                    b.totalPrice
+                )
+                from BookingModel as b
+            """)
+    Page<BookingSummary> findAllSummary(Pageable pageable);
+
+    default DataPage<BookingSummary> listSummary(Pageable pageable) {
+        return DataPage.from(findAllSummary(pageable));
+    }
 }
