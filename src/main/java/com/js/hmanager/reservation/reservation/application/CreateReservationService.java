@@ -1,9 +1,9 @@
 package com.js.hmanager.reservation.reservation.application;
 
 import com.js.hmanager.reservation.reservation.application.adapters.InventoryService;
-import com.js.hmanager.reservation.reservation.domain.Booking;
-import com.js.hmanager.reservation.reservation.domain.BookingRepository;
-import com.js.hmanager.reservation.reservation.domain.BookingRoom;
+import com.js.hmanager.reservation.reservation.domain.Reservation;
+import com.js.hmanager.reservation.reservation.domain.ReservationRepository;
+import com.js.hmanager.reservation.reservation.domain.ReservationRoom;
 import com.js.hmanager.reservation.customer.domain.CustomerRepository;
 import com.js.hmanager.common.domainExceptions.NotFoundEntityDomainException;
 import org.springframework.stereotype.Service;
@@ -12,22 +12,22 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class CreateBooking {
-    private final BookingRepository bookingRepository;
+public class CreateReservationService {
+    private final ReservationRepository reservationRepository;
     private final CustomerRepository customerRepository;
     private final InventoryService inventoryService;
 
-    public CreateBooking(
-            BookingRepository bookingRepository,
+    public CreateReservationService(
+            ReservationRepository reservationRepository,
             CustomerRepository customerRepository,
             InventoryService inventoryService
     ) {
-        this.bookingRepository = bookingRepository;
+        this.reservationRepository = reservationRepository;
         this.customerRepository = customerRepository;
         this.inventoryService = inventoryService;
     }
 
-    public UUID execute(CreateBookingDto bookingData) {
+    public UUID execute(CreateReservationDto bookingData) {
         boolean existsCustomer = customerRepository.exists(bookingData.customerId());
 
         if (!existsCustomer) {
@@ -36,17 +36,17 @@ public class CreateBooking {
             );
         }
 
-        List<BookingRoom> rooms = inventoryService.findRooms(bookingData.roomIds());
+        List<ReservationRoom> rooms = inventoryService.findRooms(bookingData.roomIds());
         this.validateAllRoomsExists(rooms, bookingData.roomIds());
 
-        Booking booking = new Booking(bookingData.checkinDate(), bookingData.checkoutDate(), rooms);
+        Reservation reservation = new Reservation(bookingData.checkinDate(), bookingData.checkoutDate(), rooms);
 
-        bookingRepository.save(booking);
+        reservationRepository.save(reservation);
 
-        return booking.getId();
+        return reservation.getId();
     }
 
-    private void validateAllRoomsExists(List<BookingRoom> rooms, List<UUID> roomsIds) {
+    private void validateAllRoomsExists(List<ReservationRoom> rooms, List<UUID> roomsIds) {
         if (rooms.size() == roomsIds.size()) {
             return;
         }

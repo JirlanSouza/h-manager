@@ -1,6 +1,6 @@
 package com.js.hmanager.reservation.reservation.data;
 
-import com.js.hmanager.reservation.reservation.domain.BookingRoom;
+import com.js.hmanager.reservation.reservation.domain.ReservationRoom;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Table(name = "bookings_rooms")
-public class BookingRoomModel {
+public class ReservationRoomModel {
     @Id
     private UUID id;
     private String number;
@@ -26,7 +26,7 @@ public class BookingRoomModel {
     @Column(name = "booking_id")
     private UUID bookingId;
 
-    public BookingRoomModel(UUID bookingId, BookingRoom room) {
+    public ReservationRoomModel(UUID bookingId, ReservationRoom room) {
         this(room.getId(), room.getNumber(), room.getDailyRate(), bookingId);
     }
 }

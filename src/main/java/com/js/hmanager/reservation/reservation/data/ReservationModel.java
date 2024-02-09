@@ -1,7 +1,7 @@
 package com.js.hmanager.reservation.reservation.data;
 
-import com.js.hmanager.reservation.reservation.domain.Booking;
-import com.js.hmanager.reservation.reservation.domain.BookingStatus;
+import com.js.hmanager.reservation.reservation.domain.Reservation;
+import com.js.hmanager.reservation.reservation.domain.ReservationStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Table(name = "bookings")
-public class BookingModel {
+public class ReservationModel {
     @Id
     private UUID id;
     private OffsetDateTime checkInDate;
@@ -25,22 +25,22 @@ public class BookingModel {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "booking_id")
-    private List<BookingRoomModel> roms;
+    private List<ReservationRoomModel> roms;
     private BigDecimal totalPrice;
 
     @Enumerated(EnumType.STRING)
-    private BookingStatus status;
+    private ReservationStatus status;
 
-    public BookingModel(Booking booking) {
+    public ReservationModel(Reservation reservation) {
         this(
-                booking.getId(),
-                booking.getCheckInDate(),
-                booking.getCheckOutDate(),
-                booking.getRoms().stream().map(
-                        room -> new BookingRoomModel(booking.getId(), room)
+                reservation.getId(),
+                reservation.getCheckInDate(),
+                reservation.getCheckOutDate(),
+                reservation.getRoms().stream().map(
+                        room -> new ReservationRoomModel(reservation.getId(), room)
                 ).toList(),
-                booking.getTotalPrice(),
-                booking.getStatus()
+                reservation.getTotalPrice(),
+                reservation.getStatus()
         );
     }
 }

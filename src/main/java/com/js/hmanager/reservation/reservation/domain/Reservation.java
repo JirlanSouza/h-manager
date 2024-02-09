@@ -15,15 +15,15 @@ import java.util.UUID;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class Booking {
+public class Reservation {
     private final UUID id;
     private OffsetDateTime checkInDate;
     private OffsetDateTime checkOutDate;
-    private List<BookingRoom> roms;
-    private BookingStatus status;
+    private List<ReservationRoom> roms;
+    private ReservationStatus status;
     private BigDecimal totalPrice;
 
-    public Booking(OffsetDateTime checkIn, OffsetDateTime checkOut, List<BookingRoom> rooms) {
+    public Reservation(OffsetDateTime checkIn, OffsetDateTime checkOut, List<ReservationRoom> rooms) {
         this.validateHostingPeriod(checkIn, checkOut);
 
         if (rooms.isEmpty()) {
@@ -34,22 +34,22 @@ public class Booking {
         this.checkInDate = checkIn;
         this.checkOutDate = checkOut;
         this.roms = rooms;
-        this.status = BookingStatus.CREATED;
+        this.status = ReservationStatus.CREATED;
         this.totalPrice = BigDecimal.ZERO;
     }
 
-    public static Booking restore(
+    public static Reservation restore(
             UUID id,
             OffsetDateTime checkIn,
             OffsetDateTime checkOut,
-            List<BookingRoom> roms,
-            BookingStatus status,
+            List<ReservationRoom> roms,
+            ReservationStatus status,
             BigDecimal totalPrice
     ) {
-        return new Booking(id, checkIn, checkOut, roms, status, totalPrice);
+        return new Reservation(id, checkIn, checkOut, roms, status, totalPrice);
     }
 
-    public void addRoom(BookingRoom room) {
+    public void addRoom(ReservationRoom room) {
         this.roms.add(room);
     }
 
@@ -104,7 +104,7 @@ public class Booking {
         long daysOfStay = calculateDaysOfStay();
         totalPrice = BigDecimal.ZERO;
 
-        for (BookingRoom r : roms) {
+        for (ReservationRoom r : roms) {
             totalPrice = totalPrice.add(r.getDailyRate().multiply(BigDecimal.valueOf(daysOfStay)));
         }
     }

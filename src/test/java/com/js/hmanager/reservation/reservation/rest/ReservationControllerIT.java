@@ -1,9 +1,9 @@
 package com.js.hmanager.reservation.reservation.rest;
 
 import com.js.hmanager.account.authentication.AuthenticationTestUtils;
-import com.js.hmanager.reservation.reservation.application.BookingSummary;
-import com.js.hmanager.reservation.reservation.application.CreateBookingDto;
-import com.js.hmanager.reservation.reservation.data.BookingModel;
+import com.js.hmanager.reservation.reservation.application.ReservationSummary;
+import com.js.hmanager.reservation.reservation.application.CreateReservationDto;
+import com.js.hmanager.reservation.reservation.data.ReservationModel;
 import com.js.hmanager.reservation.customer.data.CustomerJpaRepository;
 import com.js.hmanager.common.AbstractApiTest;
 import com.js.hmanager.common.data.DataPage;
@@ -28,7 +28,7 @@ import java.util.UUID;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class BookingControllerIT extends AbstractApiTest {
+class ReservationControllerIT extends AbstractApiTest {
 
     @Autowired
     AuthenticationTestUtils authenticationTestUtils;
@@ -40,7 +40,7 @@ class BookingControllerIT extends AbstractApiTest {
     RoomJpaRepository roomRepository;
 
     @Autowired
-    BookingTestUtils bookingTestUtils;
+    ReservationTestUtils reservationTestUtils;
 
     @BeforeEach
     void prepareDatabase(@Autowired Flyway flyway) {
@@ -53,11 +53,11 @@ class BookingControllerIT extends AbstractApiTest {
     @Test
     @DisplayName("Should create new booking")
     void createBooking() {
-        UUID customerId = this.bookingTestUtils.createCustomerIntoDatabase();
-        List<UUID> roomsIds = this.bookingTestUtils.createRoomsIntoDatabase(1).stream()
+        UUID customerId = this.reservationTestUtils.createCustomerIntoDatabase();
+        List<UUID> roomsIds = this.reservationTestUtils.createRoomsIntoDatabase(1).stream()
                 .map(RoomModel::getId).toList();
 
-        CreateBookingDto bookingDto = new CreateBookingDto(
+        CreateReservationDto bookingDto = new CreateReservationDto(
                 customerId,
                 OffsetDateTime.now().plusDays(6),
                 OffsetDateTime.now().plusDays(10),
@@ -77,10 +77,10 @@ class BookingControllerIT extends AbstractApiTest {
     @Test
     @DisplayName("Should return 404 NOT FOUND status code when create booking to non existent customer")
     void createBookingToNonExistentCustomer() {
-        List<UUID> roomsIds = this.bookingTestUtils.createRoomsIntoDatabase(1).stream()
+        List<UUID> roomsIds = this.reservationTestUtils.createRoomsIntoDatabase(1).stream()
                 .map(RoomModel::getId).toList();
 
-        CreateBookingDto bookingDto = new CreateBookingDto(
+        CreateReservationDto bookingDto = new CreateReservationDto(
                 UUID.randomUUID(),
                 OffsetDateTime.now().plusDays(6),
                 OffsetDateTime.now().plusDays(10),
@@ -99,14 +99,14 @@ class BookingControllerIT extends AbstractApiTest {
     @Test
     @DisplayName("Should return 404 NOT FOUND status code when create booking with non existent rooms")
     void createBookingWithNonExistentRooms() {
-        UUID customerId = this.bookingTestUtils.createCustomerIntoDatabase();
+        UUID customerId = this.reservationTestUtils.createCustomerIntoDatabase();
 
-        List<UUID> roomsIds = new ArrayList<>(this.bookingTestUtils.createRoomsIntoDatabase(1).stream()
+        List<UUID> roomsIds = new ArrayList<>(this.reservationTestUtils.createRoomsIntoDatabase(1).stream()
                 .map(RoomModel::getId).toList());
         roomsIds.add(UUID.randomUUID());
 
 
-        CreateBookingDto bookingDto = new CreateBookingDto(
+        CreateReservationDto bookingDto = new CreateReservationDto(
                 customerId,
                 OffsetDateTime.now().plusDays(6),
                 OffsetDateTime.now().plusDays(10),
@@ -137,11 +137,11 @@ class BookingControllerIT extends AbstractApiTest {
     @Test
     @DisplayName("Should return 400 BAD REQUEST status code when create booking with checkin date latter of checkout date")
     void createBookingWithCheckinAfterCheckout() {
-        UUID customerId = this.bookingTestUtils.createCustomerIntoDatabase();
-        List<UUID> roomsIds = this.bookingTestUtils.createRoomsIntoDatabase(1).stream()
+        UUID customerId = this.reservationTestUtils.createCustomerIntoDatabase();
+        List<UUID> roomsIds = this.reservationTestUtils.createRoomsIntoDatabase(1).stream()
                 .map(RoomModel::getId).toList();
 
-        CreateBookingDto bookingDto = new CreateBookingDto(
+        CreateReservationDto bookingDto = new CreateReservationDto(
                 customerId,
                 OffsetDateTime.now().plusDays(4),
                 OffsetDateTime.now().plusDays(2),
@@ -172,7 +172,7 @@ class BookingControllerIT extends AbstractApiTest {
     @Test
     @DisplayName("Should return 200 OK status code with page of bookings summary")
     void listBookingsSummary() {
-        List<BookingModel> bookings = this.bookingTestUtils.createBookingsIntoDatabase();
+        List<ReservationModel> bookings = this.reservationTestUtils.createBookingsIntoDatabase();
 
         Response response = given().basePath("/bookings")
                 .port(port)
@@ -182,10 +182,10 @@ class BookingControllerIT extends AbstractApiTest {
         assertThat(response.statusCode()).as("Status code is 200 - OK").isEqualTo(200);
 
         SoftAssertions.assertSoftly(softly -> {
-            DataPage<BookingSummary> dataPage = response.body().<DataPage<BookingSummary>>as(DataPage.class);
+            DataPage<ReservationSummary> dataPage = response.body().<DataPage<ReservationSummary>>as(DataPage.class);
             softly.assertThat(dataPage.totalItems()).isEqualTo(bookings.size());
 
-            List<BookingSummary> data = response.body().jsonPath().getList("data", BookingSummary.class);
+            List<ReservationSummary> data = response.body().jsonPath().getList("data", ReservationSummary.class);
 
             softly.assertThat(data.get(0).id()).as("Is equals ids").isEqualTo(bookings.get(0).getId());
             softly.assertThat(data.get(0).checkInDate()).as("Is equals checkInDate").isEqualTo(bookings.get(0).getCheckInDate());
@@ -207,10 +207,10 @@ class BookingControllerIT extends AbstractApiTest {
         assertThat(response.statusCode()).as("Status code is 200 - OK").isEqualTo(200);
 
         SoftAssertions.assertSoftly(softly -> {
-            DataPage<BookingSummary> dataPage = response.body().<DataPage<BookingSummary>>as(DataPage.class);
+            DataPage<ReservationSummary> dataPage = response.body().<DataPage<ReservationSummary>>as(DataPage.class);
             softly.assertThat(dataPage.totalItems()).as("Page totalItems is 0").isEqualTo(0);
 
-            List<BookingSummary> data = response.body().jsonPath().getList("data", BookingSummary.class);
+            List<ReservationSummary> data = response.body().jsonPath().getList("data", ReservationSummary.class);
             softly.assertThat(data.isEmpty()).as("Page data is empty").isTrue();
         });
     }

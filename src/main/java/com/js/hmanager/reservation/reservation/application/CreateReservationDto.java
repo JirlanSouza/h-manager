@@ -4,7 +4,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
-public record CreateBookingDto(
+public record CreateReservationDto(
         UUID customerId,
         OffsetDateTime checkinDate,
         OffsetDateTime checkoutDate,

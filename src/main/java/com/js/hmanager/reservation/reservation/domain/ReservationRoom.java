@@ -9,18 +9,18 @@ import java.util.UUID;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class BookingRoom {
+public class ReservationRoom {
     private final UUID id;
     private String number;
     private BigDecimal dailyRate;
 
-    public BookingRoom(String number, BigDecimal dailyRate) {
+    public ReservationRoom(String number, BigDecimal dailyRate) {
         this.id = UUID.randomUUID();
         this.number = number;
         this.dailyRate = dailyRate;
     }
 
-    static BookingRoom from(UUID id, String number, BigDecimal dailyRate) {
-        return new BookingRoom(id, number, dailyRate);
+    static ReservationRoom from(UUID id, String number, BigDecimal dailyRate) {
+        return new ReservationRoom(id, number, dailyRate);
     }
 }

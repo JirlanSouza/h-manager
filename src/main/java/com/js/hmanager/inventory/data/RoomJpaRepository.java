@@ -1,7 +1,7 @@
 package com.js.hmanager.inventory.data;
 
 import com.js.hmanager.reservation.reservation.application.adapters.InventoryService;
-import com.js.hmanager.reservation.reservation.domain.BookingRoom;
+import com.js.hmanager.reservation.reservation.domain.ReservationRoom;
 import com.js.hmanager.inventory.domain.Room;
 import com.js.hmanager.inventory.domain.RoomRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -37,5 +37,5 @@ public interface RoomJpaRepository extends JpaRepository<RoomModel, UUID>, RoomR
             )
         from RoomModel as r where r.id in :roomIds
         """)
-    List<BookingRoom> findRooms(List<UUID> roomIds);
+    List<ReservationRoom> findRooms(List<UUID> roomIds);
 }

@@ -1,9 +1,9 @@
 package com.js.hmanager.reservation.reservation.rest;
 
-import com.js.hmanager.reservation.reservation.data.BookingJpaRepository;
-import com.js.hmanager.reservation.reservation.data.BookingModel;
-import com.js.hmanager.reservation.reservation.data.BookingRoomModel;
-import com.js.hmanager.reservation.reservation.domain.BookingStatus;
+import com.js.hmanager.reservation.reservation.data.ReservationJpaRepository;
+import com.js.hmanager.reservation.reservation.data.ReservationModel;
+import com.js.hmanager.reservation.reservation.data.ReservationRoomModel;
+import com.js.hmanager.reservation.reservation.domain.ReservationStatus;
 import com.js.hmanager.reservation.customer.data.CustomerJpaRepository;
 import com.js.hmanager.reservation.customer.data.CustomerModel;
 import com.js.hmanager.inventory.data.RoomJpaRepository;
@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 
 
 @Component
-public class BookingTestUtils {
+public class ReservationTestUtils {
 
     @Autowired
     private CustomerJpaRepository customerRepository;
@@ -30,7 +30,7 @@ public class BookingTestUtils {
     private RoomJpaRepository roomRepository;
 
     @Autowired
-    private BookingJpaRepository bookingRepository;
+    private ReservationJpaRepository bookingRepository;
 
     public UUID createCustomerIntoDatabase() {
         CustomerModel customerModel = CustomerModel.builder()
@@ -74,16 +74,16 @@ public class BookingTestUtils {
         return roomModels;
     }
 
-    public List<BookingModel> createBookingsIntoDatabase() {
+    public List<ReservationModel> createBookingsIntoDatabase() {
         List<RoomModel> roomModels = createRoomsIntoDatabase(6);
-        List<BookingModel> bookingModels = new ArrayList<>();
+        List<ReservationModel> reservationModels = new ArrayList<>();
 
         for (int i = 0; i < 4; i++) {
             UUID bookingId = UUID.randomUUID();
-            List<BookingRoomModel> bookingRoomModels = roomModels.stream()
+            List<ReservationRoomModel> reservationRoomModels = roomModels.stream()
                     .skip((i % 2 == 0 ? 1 : 2))
                     .limit(i % 2 == 0 ? 1 : 2)
-                    .map(rm -> new BookingRoomModel(
+                    .map(rm -> new ReservationRoomModel(
                             UUID.randomUUID(),
                             rm.getNumber(),
                             rm.getDailyRate(),
@@ -91,21 +91,21 @@ public class BookingTestUtils {
                     )).toList();
 
             BigDecimal bookingTotalPrice = new BigDecimal(0);
-            for (BookingRoomModel bookingRoomModel : bookingRoomModels) {
-                bookingTotalPrice = bookingTotalPrice.add(bookingRoomModel.getDailyRate());
+            for (ReservationRoomModel reservationRoomModel : reservationRoomModels) {
+                bookingTotalPrice = bookingTotalPrice.add(reservationRoomModel.getDailyRate());
             }
 
-            bookingModels.add(new BookingModel(
+            reservationModels.add(new ReservationModel(
                     bookingId,
                     OffsetDateTime.now().plusDays(5),
                     OffsetDateTime.now().plusDays(8),
-                    bookingRoomModels,
+                    reservationRoomModels,
                     bookingTotalPrice,
-                    BookingStatus.CREATED
+                    ReservationStatus.CREATED
             ));
         }
 
-        bookingRepository.saveAll(bookingModels);
-        return bookingModels;
+        bookingRepository.saveAll(reservationModels);
+        return reservationModels;
     }
 }

@@ -1,9 +1,9 @@
 package com.js.hmanager.reservation.reservation.application;
 
 import com.js.hmanager.reservation.reservation.application.adapters.InventoryService;
-import com.js.hmanager.reservation.reservation.domain.Booking;
-import com.js.hmanager.reservation.reservation.domain.BookingRepository;
-import com.js.hmanager.reservation.reservation.domain.BookingRoom;
+import com.js.hmanager.reservation.reservation.domain.Reservation;
+import com.js.hmanager.reservation.reservation.domain.ReservationRepository;
+import com.js.hmanager.reservation.reservation.domain.ReservationRoom;
 import com.js.hmanager.reservation.customer.domain.CustomerRepository;
 import com.js.hmanager.common.domainExceptions.InvalidArgumentDomainException;
 import com.js.hmanager.common.domainExceptions.NotFoundEntityDomainException;
@@ -24,10 +24,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class CreateBookingTest {
+class CreateReservationTest {
 
     @Mock
-    private BookingRepository bookingRepository;
+    private ReservationRepository reservationRepository;
 
     @Mock
     CustomerRepository customerRepository;
@@ -36,12 +36,12 @@ class CreateBookingTest {
     InventoryService inventoryService;
 
     @InjectMocks
-    private CreateBooking createBookingHandler;
+    private CreateReservationService createReservationServiceHandler;
 
     @Test
     @DisplayName("Should create a new booking")
     void createNewBooking() {
-        CreateBookingDto command = new CreateBookingDto(
+        CreateReservationDto command = new CreateReservationDto(
                 UUID.randomUUID(),
                 OffsetDateTime.now(),
                 OffsetDateTime.now().plusDays(2),
@@ -50,31 +50,31 @@ class CreateBookingTest {
 
         when(customerRepository.exists(isA(UUID.class))).thenReturn(true);
         when(inventoryService.findRooms(anyList()))
-                .thenReturn(List.of(new BookingRoom("1001", new BigDecimal("220.99"))));
+                .thenReturn(List.of(new ReservationRoom("1001", new BigDecimal("220.99"))));
 
-        UUID bookingId = createBookingHandler.execute(command);
+        UUID bookingId = createReservationServiceHandler.execute(command);
 
         assertNotNull(bookingId);
-        verify(bookingRepository, only()).save(isA(Booking.class));
+        verify(reservationRepository, only()).save(isA(Reservation.class));
     }
 
     @Test
     @DisplayName("Should throw NotFoundEntityDomainException when creating a booking with a no existent customer")
     void createBookingWithNonexistentCustomer() {
-        CreateBookingDto command = new CreateBookingDto(
+        CreateReservationDto command = new CreateReservationDto(
                 UUID.randomUUID(),
                 OffsetDateTime.now(),
                 OffsetDateTime.now().plusDays(2),
                 List.of(UUID.randomUUID())
         );
 
-        assertThrows(NotFoundEntityDomainException.class, () -> createBookingHandler.execute(command));
+        assertThrows(NotFoundEntityDomainException.class, () -> createReservationServiceHandler.execute(command));
     }
 
     @Test
     @DisplayName("Should throw InvalidArgumentDomain exception when creating a booking with an empty room list")
     void createBookingWithEmptyRoomList() {
-        CreateBookingDto command = new CreateBookingDto(
+        CreateReservationDto command = new CreateReservationDto(
                 UUID.randomUUID(),
                 OffsetDateTime.now(),
                 OffsetDateTime.now().plusDays(2),
@@ -83,6 +83,6 @@ class CreateBookingTest {
 
         when(customerRepository.exists(isA(UUID.class))).thenReturn(true);
 
-        assertThrows(InvalidArgumentDomainException.class, () -> createBookingHandler.execute(command));
+        assertThrows(InvalidArgumentDomainException.class, () -> createReservationServiceHandler.execute(command));
     }
 }
