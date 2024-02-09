@@ -27,19 +27,19 @@ public class CreateReservationService {
         this.inventoryService = inventoryService;
     }
 
-    public UUID execute(CreateReservationDto bookingData) {
-        boolean existsCustomer = customerRepository.exists(bookingData.customerId());
+    public UUID execute(CreateReservationDto reservationData) {
+        boolean existsCustomer = customerRepository.exists(reservationData.customerId());
 
         if (!existsCustomer) {
             throw new NotFoundEntityDomainException(
-                    "The customer with id: '%s' does not exists".formatted(bookingData.customerId())
+                    "The customer with id: '%s' does not exists".formatted(reservationData.customerId())
             );
         }
 
-        List<ReservationRoom> rooms = inventoryService.findRooms(bookingData.roomIds());
-        this.validateAllRoomsExists(rooms, bookingData.roomIds());
+        List<ReservationRoom> rooms = inventoryService.findRooms(reservationData.roomIds());
+        this.validateAllRoomsExists(rooms, reservationData.roomIds());
 
-        Reservation reservation = new Reservation(bookingData.checkinDate(), bookingData.checkoutDate(), rooms);
+        Reservation reservation = new Reservation(reservationData.checkinDate(), reservationData.checkoutDate(), rooms);
 
         reservationRepository.save(reservation);
 

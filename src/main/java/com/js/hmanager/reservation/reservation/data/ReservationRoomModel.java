@@ -16,17 +16,17 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "bookings_rooms")
+@Table(name = "reservations_rooms")
 public class ReservationRoomModel {
     @Id
     private UUID id;
     private String number;
     private BigDecimal dailyRate;
 
-    @Column(name = "booking_id")
-    private UUID bookingId;
+    @Column(name = "reservation_id")
+    private UUID reservationId;
 
-    public ReservationRoomModel(UUID bookingId, ReservationRoom room) {
-        this(room.getId(), room.getNumber(), room.getDailyRate(), bookingId);
+    public ReservationRoomModel(UUID reservationId, ReservationRoom room) {
+        this(room.getId(), room.getNumber(), room.getDailyRate(), reservationId);
     }
 }

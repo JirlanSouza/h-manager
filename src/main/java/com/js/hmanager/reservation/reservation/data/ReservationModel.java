@@ -16,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "bookings")
+@Table(name = "reservations")
 public class ReservationModel {
     @Id
     private UUID id;
@@ -24,7 +24,7 @@ public class ReservationModel {
     private OffsetDateTime checkOutDate;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "booking_id")
+    @JoinColumn(name = "reservation_id")
     private List<ReservationRoomModel> roms;
     private BigDecimal totalPrice;
 

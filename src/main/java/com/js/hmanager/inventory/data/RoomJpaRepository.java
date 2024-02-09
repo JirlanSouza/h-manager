@@ -30,7 +30,7 @@ public interface RoomJpaRepository extends JpaRepository<RoomModel, UUID>, RoomR
 
     @Override
     @Query("""
-        select new com.js.hmanager.reservation.reservation.domain.BookingRoom(
+        select new com.js.hmanager.reservation.reservation.domain.ReservationRoom(
                 r.id,
                 r.number,
                 r.dailyRate

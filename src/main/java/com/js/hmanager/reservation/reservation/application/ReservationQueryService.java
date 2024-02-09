@@ -13,7 +13,7 @@ public class ReservationQueryService {
         this.reservationQueryRepository = reservationQueryRepository;
     }
 
-    public DataPage<ReservationSummary> getBookingsSummary(Pageable pageable) {
+    public DataPage<ReservationSummary> getReservationsSummary(Pageable pageable) {
         return this.reservationQueryRepository.listSummary(pageable);
     }
 }

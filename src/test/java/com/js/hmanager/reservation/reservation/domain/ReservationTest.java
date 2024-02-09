@@ -75,7 +75,7 @@ class ReservationTest {
     }
 
     @Test
-    @DisplayName("Should calculate the correct total price when the booking has a checkin and checkout in normal datetime")
+    @DisplayName("Should calculate the correct total price when the reservation has a checkin and checkout in normal datetime")
     void calculateTotalPrice() {
         ArrayList<ReservationRoom> rooms = new ArrayList<>();
         rooms.add(new ReservationRoom("1001", new BigDecimal("100.00")));
@@ -89,7 +89,7 @@ class ReservationTest {
     }
 
     @Test
-    @DisplayName("Should calculate the correct total price when the booking has a checking datetime before the start time")
+    @DisplayName("Should calculate the correct total price when the reservation has a checking datetime before the start time")
     void calculateTotalPriceToBeforeCheckinStartTime() {
         ArrayList<ReservationRoom> rooms = new ArrayList<>();
         rooms.add(new ReservationRoom("1001", new BigDecimal("100.00")));
@@ -103,7 +103,7 @@ class ReservationTest {
     }
 
     @Test
-    @DisplayName("Should calculate the correct total price when the booking has a checkout datetime after the end time")
+    @DisplayName("Should calculate the correct total price when the reservation has a checkout datetime after the end time")
     void calculateTotalPriceToAfterCheckoutEndTime() {
         ArrayList<ReservationRoom> rooms = new ArrayList<>();
         rooms.add(new ReservationRoom("1001", new BigDecimal("100.00")));
@@ -117,7 +117,7 @@ class ReservationTest {
     }
 
     @Test
-    @DisplayName("Should calculate the correct total price when the booking has a checkout datetime after the end time")
+    @DisplayName("Should calculate the correct total price when the reservation has a checkout datetime after the end time")
     void calculateTotalPriceToBeforeCheckinStartTimeANdAfterCheckoutEndTime() {
         ArrayList<ReservationRoom> rooms = new ArrayList<>();
         rooms.add(new ReservationRoom("1001", new BigDecimal("100.00")));

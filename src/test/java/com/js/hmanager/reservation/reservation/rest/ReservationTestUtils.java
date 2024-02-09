@@ -30,7 +30,7 @@ public class ReservationTestUtils {
     private RoomJpaRepository roomRepository;
 
     @Autowired
-    private ReservationJpaRepository bookingRepository;
+    private ReservationJpaRepository reservationRepository;
 
     public UUID createCustomerIntoDatabase() {
         CustomerModel customerModel = CustomerModel.builder()
@@ -74,12 +74,12 @@ public class ReservationTestUtils {
         return roomModels;
     }
 
-    public List<ReservationModel> createBookingsIntoDatabase() {
+    public List<ReservationModel> createReservationsIntoDatabase() {
         List<RoomModel> roomModels = createRoomsIntoDatabase(6);
         List<ReservationModel> reservationModels = new ArrayList<>();
 
         for (int i = 0; i < 4; i++) {
-            UUID bookingId = UUID.randomUUID();
+            UUID reservationId = UUID.randomUUID();
             List<ReservationRoomModel> reservationRoomModels = roomModels.stream()
                     .skip((i % 2 == 0 ? 1 : 2))
                     .limit(i % 2 == 0 ? 1 : 2)
@@ -87,25 +87,25 @@ public class ReservationTestUtils {
                             UUID.randomUUID(),
                             rm.getNumber(),
                             rm.getDailyRate(),
-                            bookingId
+                            reservationId
                     )).toList();
 
-            BigDecimal bookingTotalPrice = new BigDecimal(0);
+            BigDecimal reservationTotalPrice = new BigDecimal(0);
             for (ReservationRoomModel reservationRoomModel : reservationRoomModels) {
-                bookingTotalPrice = bookingTotalPrice.add(reservationRoomModel.getDailyRate());
+                reservationTotalPrice = reservationTotalPrice.add(reservationRoomModel.getDailyRate());
             }
 
             reservationModels.add(new ReservationModel(
-                    bookingId,
+                    reservationId,
                     OffsetDateTime.now().plusDays(5),
                     OffsetDateTime.now().plusDays(8),
                     reservationRoomModels,
-                    bookingTotalPrice,
+                    reservationTotalPrice,
                     ReservationStatus.CREATED
             ));
         }
 
-        bookingRepository.saveAll(reservationModels);
+        reservationRepository.saveAll(reservationModels);
         return reservationModels;
     }
 }

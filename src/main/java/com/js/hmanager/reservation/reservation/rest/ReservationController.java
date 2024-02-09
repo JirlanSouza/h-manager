@@ -25,12 +25,12 @@ public class ReservationController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UUID createBooking(@RequestBody CreateReservationDto bookingDto) {
-        return this.createReservationService.execute(bookingDto);
+    public UUID createReservation(@RequestBody CreateReservationDto reservationDto) {
+        return this.createReservationService.execute(reservationDto);
     }
 
     @GetMapping
-    public DataPage<ReservationSummary> getBookingsSummary(Pageable pageable) {
-        return this.reservationQueryService.getBookingsSummary(pageable);
+    public DataPage<ReservationSummary> getReservationsSummary(Pageable pageable) {
+        return this.reservationQueryService.getReservationsSummary(pageable);
     }
 }

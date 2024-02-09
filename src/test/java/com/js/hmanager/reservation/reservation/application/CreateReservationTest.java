@@ -39,8 +39,8 @@ class CreateReservationTest {
     private CreateReservationService createReservationServiceHandler;
 
     @Test
-    @DisplayName("Should create a new booking")
-    void createNewBooking() {
+    @DisplayName("Should create a new reservation")
+    void createNewReservation() {
         CreateReservationDto command = new CreateReservationDto(
                 UUID.randomUUID(),
                 OffsetDateTime.now(),
@@ -52,15 +52,15 @@ class CreateReservationTest {
         when(inventoryService.findRooms(anyList()))
                 .thenReturn(List.of(new ReservationRoom("1001", new BigDecimal("220.99"))));
 
-        UUID bookingId = createReservationServiceHandler.execute(command);
+        UUID reservationId = createReservationServiceHandler.execute(command);
 
-        assertNotNull(bookingId);
+        assertNotNull(reservationId);
         verify(reservationRepository, only()).save(isA(Reservation.class));
     }
 
     @Test
-    @DisplayName("Should throw NotFoundEntityDomainException when creating a booking with a no existent customer")
-    void createBookingWithNonexistentCustomer() {
+    @DisplayName("Should throw NotFoundEntityDomainException when creating a reservation with a no existent customer")
+    void createReservationWithNonexistentCustomer() {
         CreateReservationDto command = new CreateReservationDto(
                 UUID.randomUUID(),
                 OffsetDateTime.now(),
@@ -72,8 +72,8 @@ class CreateReservationTest {
     }
 
     @Test
-    @DisplayName("Should throw InvalidArgumentDomain exception when creating a booking with an empty room list")
-    void createBookingWithEmptyRoomList() {
+    @DisplayName("Should throw InvalidArgumentDomain exception when creating a reservation with an empty room list")
+    void createReservationWithEmptyRoomList() {
         CreateReservationDto command = new CreateReservationDto(
                 UUID.randomUUID(),
                 OffsetDateTime.now(),
