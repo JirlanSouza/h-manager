@@ -1,7 +1,7 @@
 package com.js.hmanager.inventory.data;
 
-import com.js.hmanager.booking.booking.application.adapters.InventoryService;
-import com.js.hmanager.booking.booking.domain.BookingRoom;
+import com.js.hmanager.reservation.reservation.application.adapters.InventoryService;
+import com.js.hmanager.reservation.reservation.domain.BookingRoom;
 import com.js.hmanager.inventory.domain.Room;
 import com.js.hmanager.inventory.domain.RoomRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -30,7 +30,7 @@ public interface RoomJpaRepository extends JpaRepository<RoomModel, UUID>, RoomR
 
     @Override
     @Query("""
-        select new com.js.hmanager.booking.booking.domain.BookingRoom(
+        select new com.js.hmanager.reservation.reservation.domain.BookingRoom(
                 r.id,
                 r.number,
                 r.dailyRate
