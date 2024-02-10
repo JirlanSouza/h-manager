@@ -12,21 +12,21 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CreateCustomerTest {
 
     @Mock
-    CustomerRepository customerRepository;
+    private CustomerRepository customerRepository;
 
     @InjectMocks
-    CreateCustomer createCustomer;
+    private CreateCustomer createCustomer;
 
     @Test
     @DisplayName("Should create a new customer")
-    void createNewCustomer() {
+    public void createNewCustomer() {
         CreateCustomerDto command = new CreateCustomerDto(
                 "Joe jho", "111.444.777-35", "joejho@hmanager.com", "1296969696",
                 new CreateCustomerAddressDto(
@@ -44,7 +44,7 @@ class CreateCustomerTest {
 
         UUID customerId = createCustomer.execute(command);
 
-        assertNotNull(customerId);
+        assertThat(customerId).isNotNull();
         verify(customerRepository, times(1)).save(isA(Customer.class));
     }
 
