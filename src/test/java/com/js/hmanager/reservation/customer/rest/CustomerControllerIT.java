@@ -7,6 +7,7 @@ import com.js.hmanager.common.AbstractApiTest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.assertj.core.api.SoftAssertions;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +32,7 @@ class CustomerControllerIT extends AbstractApiTest {
     private CustomerJpaRepository customerJpaRepository;
 
     @BeforeEach
-    void prepareDatabase(@Autowired Flyway flyway) {
+    public void prepareDatabase(@Autowired Flyway flyway) {
         flyway.clean();
         flyway.migrate();
 
@@ -39,13 +40,13 @@ class CustomerControllerIT extends AbstractApiTest {
     }
 
     @AfterAll
-    static void clearDataBase(@Autowired Flyway flyway) {
+    static public void clearDataBase(@Autowired Flyway flyway) {
         flyway.clean();
     }
 
     @Test
     @DisplayName("Should return customer id")
-    void createCustomer() {
+    public void createCustomer() {
         String createCustomerRequestBody = this.validCreteCustomerRequestBody();
 
         Response response = given().basePath("/customers")
@@ -61,20 +62,22 @@ class CustomerControllerIT extends AbstractApiTest {
 
         CustomerModel customerModel = customerModelOptional.get();
 
-        assertThat(customerModel.getName()).isEqualTo("Joe Jho");
-        assertThat((customerModel.getCpf())).isEqualTo("111.444.777-35");
-        assertThat(customerModel.getAddressStreet()).isEqualTo("Test street");
-        assertThat(customerModel.getAddressNumber()).isEqualTo("999");
-        assertThat(customerModel.getAddressNeighborhood()).isEqualTo("Test neighborhood");
-        assertThat(customerModel.getAddressZipCode()).isEqualTo("12356-458");
-        assertThat(customerModel.getAddressCity()).isEqualTo("Test city");
-        assertThat(customerModel.getAddressState()).isEqualTo("Test state");
-        assertThat(customerModel.getAddressCountry()).isEqualTo("Test country");
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(customerModel.getName()).isEqualTo("Joe Jho");
+            softly.assertThat((customerModel.getCpf())).isEqualTo("111.444.777-35");
+            softly.assertThat(customerModel.getAddressStreet()).isEqualTo("Test street");
+            softly.assertThat(customerModel.getAddressNumber()).isEqualTo("999");
+            softly.assertThat(customerModel.getAddressNeighborhood()).isEqualTo("Test neighborhood");
+            softly.assertThat(customerModel.getAddressZipCode()).isEqualTo("12356-458");
+            softly.assertThat(customerModel.getAddressCity()).isEqualTo("Test city");
+            softly.assertThat(customerModel.getAddressState()).isEqualTo("Test state");
+            softly.assertThat(customerModel.getAddressCountry()).isEqualTo("Test country");
+        });
     }
 
     @Test
     @DisplayName("Should return 400 http status when create invalid customer data")
-    void return404() {
+    public void return404() {
         String createCustomerRequestBody = this.invalidCreteCustomerRequestBody();
 
         given().basePath("/customers")
@@ -88,7 +91,7 @@ class CustomerControllerIT extends AbstractApiTest {
 
     @Test
     @DisplayName("Should return 409 http status when create customer with existent cpf")
-    void return409() {
+    public void return409() {
         String createCustomerRequestBody = this.validCreteCustomerRequestBody();
 
         given().basePath("/customers").contentType(ContentType.JSON)
