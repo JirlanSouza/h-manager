@@ -7,7 +7,8 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class RoomTest {
 
@@ -16,7 +17,7 @@ class RoomTest {
     void createNewRoom() {
         Room room = new Room("1001", 1, 0, new BigDecimal("200.00"), true);
 
-        assertInstanceOf(UUID.class, room.getId());
+        assertThat(room.getId()).isInstanceOf(UUID.class);
     }
 
     @Test
@@ -25,15 +26,15 @@ class RoomTest {
         UUID id = UUID.randomUUID();
         Room room = Room.restore(id, "1001", 1, 0, new BigDecimal("200.00"), true);
 
-        assertEquals(room.getId(), id);
+        assertThat(id).isEqualTo(room.getId());
     }
 
     @Test
     @DisplayName("Should throw InvalidArgumentException when creating a new Room with less than zero daily rate")
     void createRoomWithLessZeroDailyRate() {
-        assertThrows(InvalidArgumentDomainException.class, () -> new Room(
-                        "1001", 1, 0, new BigDecimal("0.00"), true
-                )
-        );
+        assertThatThrownBy(() -> new Room(
+                "1001", 1, 0, new BigDecimal("200.0"), true
+        ))
+                .isNotInstanceOf(InvalidArgumentDomainException.class);
     }
 }

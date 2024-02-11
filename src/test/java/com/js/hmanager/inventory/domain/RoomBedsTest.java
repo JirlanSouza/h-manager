@@ -4,7 +4,8 @@ import com.js.hmanager.common.domainExceptions.InvalidArgumentDomainException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RoomBedsTest {
 
@@ -13,7 +14,7 @@ class RoomBedsTest {
     void createNewRoomBad() {
         RoomBeds roomBeds = new RoomBeds(1, 2);
 
-        assertNotNull(roomBeds);
+        assertThat(roomBeds).isNotNull();
     }
 
     @Test
@@ -21,7 +22,7 @@ class RoomBedsTest {
     void calculateCapacity() {
         RoomBeds roomBeds = new RoomBeds(1, 2);
 
-        assertEquals(roomBeds.calculateCapacity(), 4);
+        assertThat(roomBeds.calculateCapacity()).isEqualTo(4);
     }
 
     @Test
