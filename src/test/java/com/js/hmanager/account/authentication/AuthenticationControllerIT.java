@@ -36,7 +36,7 @@ class AuthenticationControllerIT extends AbstractApiTest {
     @Disabled
     @Test
     @DisplayName("Should be create token")
-    public void createToken() {
+    void createToken() {
         var email = "test_user@hmanger.com.br";
         var password = "Test%password0";
 
@@ -63,7 +63,7 @@ class AuthenticationControllerIT extends AbstractApiTest {
     @ParameterizedTest()
     @ValueSource(booleans = {true, false})
     @DisplayName("Should be return Unauthorized http status on authenticate with wrong email or password")
-    public void unauthorizedHttpStatus(boolean wrongEmail) {
+    void unauthorizedHttpStatus(boolean wrongEmail) {
         var email = "test_user@hmanger.com.br";
         var password = "Test%password0";
 

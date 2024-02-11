@@ -24,7 +24,7 @@ class ReservationTest {
 
     @Test
     @DisplayName("Should restore with all data")
-    public void restore() {
+    void restore() {
         UUID id = UUID.randomUUID();
         OffsetDateTime checkIn = makeDateTime(2023, Month.AUGUST, 1, 14, 0);
         OffsetDateTime checkOut = makeDateTime(2023, Month.AUGUST, 5, 8, 30);
@@ -45,7 +45,7 @@ class ReservationTest {
 
     @Test
     @DisplayName("Should not create room with checkin after checkout date")
-    public void roomWithCheckinAfterCheckoutDate() {
+    void roomWithCheckinAfterCheckoutDate() {
         OffsetDateTime checkIn = makeDateTime(2023, Month.AUGUST, 6, 14, 0);
         OffsetDateTime checkOut = makeDateTime(2023, Month.AUGUST, 5, 8, 30);
         List<ReservationRoom> rooms = List.of(new ReservationRoom("1002", new BigDecimal("325.99")));
@@ -58,7 +58,7 @@ class ReservationTest {
 
     @Test
     @DisplayName("Should update totalPrice when add new room")
-    public void addRoom() {
+    void addRoom() {
         ArrayList<ReservationRoom> rooms = new ArrayList<>();
         rooms.add(new ReservationRoom("1001", new BigDecimal("225.99")));
         Reservation reservation = new Reservation(
@@ -76,7 +76,7 @@ class ReservationTest {
 
     @Test
     @DisplayName("Should calculate the correct total price when the reservation has a checkin and checkout in normal datetime")
-    public void calculateTotalPrice() {
+    void calculateTotalPrice() {
         ArrayList<ReservationRoom> rooms = new ArrayList<>();
         rooms.add(new ReservationRoom("1001", new BigDecimal("100.00")));
         Reservation reservation = new Reservation(
@@ -90,7 +90,7 @@ class ReservationTest {
 
     @Test
     @DisplayName("Should calculate the correct total price when the reservation has a checking datetime before the start time")
-    public void calculateTotalPriceToBeforeCheckinStartTime() {
+    void calculateTotalPriceToBeforeCheckinStartTime() {
         ArrayList<ReservationRoom> rooms = new ArrayList<>();
         rooms.add(new ReservationRoom("1001", new BigDecimal("100.00")));
         Reservation reservation = new Reservation(
@@ -104,7 +104,7 @@ class ReservationTest {
 
     @Test
     @DisplayName("Should calculate the correct total price when the reservation has a checkout datetime after the end time")
-    public void calculateTotalPriceToAfterCheckoutEndTime() {
+    void calculateTotalPriceToAfterCheckoutEndTime() {
         ArrayList<ReservationRoom> rooms = new ArrayList<>();
         rooms.add(new ReservationRoom("1001", new BigDecimal("100.00")));
         Reservation reservation = new Reservation(
@@ -118,7 +118,7 @@ class ReservationTest {
 
     @Test
     @DisplayName("Should calculate the correct total price when the reservation has a checkout datetime after the end time")
-    public void calculateTotalPriceToBeforeCheckinStartTimeANdAfterCheckoutEndTime() {
+    void calculateTotalPriceToBeforeCheckinStartTimeANdAfterCheckoutEndTime() {
         ArrayList<ReservationRoom> rooms = new ArrayList<>();
         rooms.add(new ReservationRoom("1001", new BigDecimal("100.00")));
         Reservation reservation = new Reservation(

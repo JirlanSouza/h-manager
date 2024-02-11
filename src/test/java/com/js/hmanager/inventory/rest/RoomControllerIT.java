@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
 import java.util.Optional;
@@ -67,13 +66,13 @@ class RoomControllerIT extends AbstractApiTest {
 
         Optional<RoomModel> roomModelOptional = roomRepository.findById(response.getBody().as(UUID.class));
 
-        assertThat(roomModelOptional.isPresent()).isTrue();
+        assertThat(roomModelOptional).isPresent();
 
         RoomModel roomModel = roomModelOptional.get();
 
         assertThat(roomModel.getNumber()).isEqualTo("1010");
         assertThat(roomModel.getDoubleBeds()).isEqualTo(1);
-        assertThat(roomModel.getSingleBeds()).isEqualTo(0);
+        assertThat(roomModel.getSingleBeds()).isZero();
         assertThat(roomModel.getDailyRate().floatValue()).isEqualTo(200.00f);
         assertThat(roomModel.isAvailable()).isTrue();
     }

@@ -40,7 +40,7 @@ class CreateReservationServiceTest {
 
     @Test
     @DisplayName("Should create a new reservation")
-    public void createNewReservation() {
+    void createNewReservation() {
         CreateReservationDto reservationDto = new CreateReservationDto(
                 UUID.randomUUID(),
                 OffsetDateTime.now(),
@@ -60,7 +60,7 @@ class CreateReservationServiceTest {
 
     @Test
     @DisplayName("Should throw NotFoundEntityDomainException when creating a reservation with a no existent customer")
-    public void createReservationWithNonexistentCustomer() {
+    void createReservationWithNonexistentCustomer() {
         CreateReservationDto reservationDto = new CreateReservationDto(
                 UUID.randomUUID(),
                 OffsetDateTime.now(),
@@ -75,7 +75,7 @@ class CreateReservationServiceTest {
 
     @Test
     @DisplayName("Should throw InvalidArgumentDomain exception when creating a reservation with an empty room list")
-    public void createReservationWithEmptyRoomList() {
+    void createReservationWithEmptyRoomList() {
         CreateReservationDto command = new CreateReservationDto(
                 UUID.randomUUID(),
                 OffsetDateTime.now(),

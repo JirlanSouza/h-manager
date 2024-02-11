@@ -26,7 +26,7 @@ class CreateCustomerTest {
 
     @Test
     @DisplayName("Should create a new customer")
-    public void createNewCustomer() {
+    void createNewCustomer() {
         CreateCustomerDto command = new CreateCustomerDto(
                 "Joe jho", "111.444.777-35", "joejho@hmanager.com", "1296969696",
                 new CreateCustomerAddressDto(

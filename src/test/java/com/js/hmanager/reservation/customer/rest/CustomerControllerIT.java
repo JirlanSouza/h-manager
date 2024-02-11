@@ -1,9 +1,9 @@
 package com.js.hmanager.reservation.customer.rest;
 
 import com.js.hmanager.account.authentication.AuthenticationTestUtils;
+import com.js.hmanager.common.AbstractApiTest;
 import com.js.hmanager.reservation.customer.data.CustomerJpaRepository;
 import com.js.hmanager.reservation.customer.data.CustomerModel;
-import com.js.hmanager.common.AbstractApiTest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -32,7 +32,7 @@ class CustomerControllerIT extends AbstractApiTest {
     private CustomerJpaRepository customerJpaRepository;
 
     @BeforeEach
-    public void prepareDatabase(@Autowired Flyway flyway) {
+    void prepareDatabase(@Autowired Flyway flyway) {
         flyway.clean();
         flyway.migrate();
 
@@ -40,13 +40,13 @@ class CustomerControllerIT extends AbstractApiTest {
     }
 
     @AfterAll
-    static public void clearDataBase(@Autowired Flyway flyway) {
+    static void clearDataBase(@Autowired Flyway flyway) {
         flyway.clean();
     }
 
     @Test
     @DisplayName("Should return customer id")
-    public void createCustomer() {
+    void createCustomer() {
         String createCustomerRequestBody = this.validCreteCustomerRequestBody();
 
         Response response = given().basePath("/customers")
@@ -58,7 +58,7 @@ class CustomerControllerIT extends AbstractApiTest {
         assertThat(response.body().as(UUID.class)).isInstanceOf(UUID.class);
 
         Optional<CustomerModel> customerModelOptional = customerJpaRepository.findById(response.getBody().as(UUID.class));
-        assertThat(customerModelOptional.isPresent()).isTrue();
+        assertThat(customerModelOptional).isPresent();
 
         CustomerModel customerModel = customerModelOptional.get();
 
@@ -77,7 +77,7 @@ class CustomerControllerIT extends AbstractApiTest {
 
     @Test
     @DisplayName("Should return 400 http status when create invalid customer data")
-    public void return404() {
+    void return404() {
         String createCustomerRequestBody = this.invalidCreteCustomerRequestBody();
 
         given().basePath("/customers")
@@ -91,7 +91,7 @@ class CustomerControllerIT extends AbstractApiTest {
 
     @Test
     @DisplayName("Should return 409 http status when create customer with existent cpf")
-    public void return409() {
+    void return409() {
         String createCustomerRequestBody = this.validCreteCustomerRequestBody();
 
         given().basePath("/customers").contentType(ContentType.JSON)

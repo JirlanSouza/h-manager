@@ -36,7 +36,7 @@ class ReservationControllerIT extends AbstractApiTest {
     private ReservationTestUtils reservationTestUtils;
 
     @BeforeEach
-    public void prepareDatabase(@Autowired Flyway flyway) {
+    void prepareDatabase(@Autowired Flyway flyway) {
         flyway.clean();
         flyway.migrate();
 
@@ -45,7 +45,7 @@ class ReservationControllerIT extends AbstractApiTest {
 
     @Test
     @DisplayName("Should create new reservation")
-    public void createReservation() {
+    void createReservation() {
         UUID customerId = this.reservationTestUtils.createCustomerIntoDatabase();
         List<UUID> roomsIds = this.reservationTestUtils.createRoomsIntoDatabase(1).stream()
                 .map(RoomModel::getId).toList();
@@ -69,7 +69,7 @@ class ReservationControllerIT extends AbstractApiTest {
 
     @Test
     @DisplayName("Should return 404 NOT FOUND status code when create reservation to non existent customer")
-    public void createReservationToNonExistentCustomer() {
+    void createReservationToNonExistentCustomer() {
         List<UUID> roomsIds = this.reservationTestUtils.createRoomsIntoDatabase(1).stream()
                 .map(RoomModel::getId).toList();
 
@@ -91,7 +91,7 @@ class ReservationControllerIT extends AbstractApiTest {
 
     @Test
     @DisplayName("Should return 404 NOT FOUND status code when create reservation with non existent rooms")
-    public void createReservationWithNonExistentRooms() {
+    void createReservationWithNonExistentRooms() {
         UUID customerId = this.reservationTestUtils.createCustomerIntoDatabase();
 
         List<UUID> roomsIds = new ArrayList<>(this.reservationTestUtils.createRoomsIntoDatabase(1).stream()
@@ -129,7 +129,7 @@ class ReservationControllerIT extends AbstractApiTest {
 
     @Test
     @DisplayName("Should return 400 BAD REQUEST status code when create reservation with checkin date latter of checkout date")
-    public void createReservationWithCheckinAfterCheckout() {
+    void createReservationWithCheckinAfterCheckout() {
         UUID customerId = this.reservationTestUtils.createCustomerIntoDatabase();
         List<UUID> roomsIds = this.reservationTestUtils.createRoomsIntoDatabase(1).stream()
                 .map(RoomModel::getId).toList();
@@ -164,7 +164,7 @@ class ReservationControllerIT extends AbstractApiTest {
 
     @Test
     @DisplayName("Should return 200 OK status code with page of reservations summary")
-    public void listReservationsSummary() {
+    void listReservationsSummary() {
         List<ReservationModel> reservations = this.reservationTestUtils.createReservationsIntoDatabase();
 
         Response response = given().basePath(RESERVATIONS_ENDPOINT)
@@ -191,7 +191,7 @@ class ReservationControllerIT extends AbstractApiTest {
 
     @Test
     @DisplayName("Should return 200 OK status code with empty page of reservations summary")
-    public void listEmptyPageOfReservationsSummary() {
+    void listEmptyPageOfReservationsSummary() {
         Response response = given().basePath(RESERVATIONS_ENDPOINT)
                 .port(port)
                 .accept(ContentType.JSON)
