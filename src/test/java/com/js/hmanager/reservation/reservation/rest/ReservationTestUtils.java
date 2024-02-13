@@ -86,6 +86,8 @@ public class ReservationTestUtils {
                     .map(rm -> new ReservationRoomModel(
                             UUID.randomUUID(),
                             rm.getNumber(),
+                            OffsetDateTime.now().plusDays(5),
+                            OffsetDateTime.now().plusDays(8),
                             rm.getDailyRate(),
                             reservationId
                     )).toList();
@@ -97,8 +99,6 @@ public class ReservationTestUtils {
 
             reservationModels.add(new ReservationModel(
                     reservationId,
-                    OffsetDateTime.now().plusDays(5),
-                    OffsetDateTime.now().plusDays(8),
                     reservationRoomModels,
                     reservationTotalPrice,
                     ReservationStatus.CREATED

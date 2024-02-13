@@ -6,8 +6,6 @@ import java.util.UUID;
 
 public record CreateReservationDto(
         UUID customerId,
-        OffsetDateTime checkinDate,
-        OffsetDateTime checkoutDate,
-        List<UUID> roomIds
+        List<ReservationRoomDto> rooms
 ) {
 }

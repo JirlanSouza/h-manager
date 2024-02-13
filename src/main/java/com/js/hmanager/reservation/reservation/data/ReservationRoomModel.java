@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Getter
@@ -21,12 +22,21 @@ public class ReservationRoomModel {
     @Id
     private UUID id;
     private String number;
+    private OffsetDateTime checkInDate;
+    private OffsetDateTime checkOutDate;
     private BigDecimal dailyRate;
 
     @Column(name = "reservation_id")
     private UUID reservationId;
 
     public ReservationRoomModel(UUID reservationId, ReservationRoom room) {
-        this(room.getId(), room.getNumber(), room.getDailyRate(), reservationId);
+        this(
+                room.getId(),
+                room.getNumber(),
+                room.getPeriod().checkIn(),
+                room.getPeriod().checkOut(),
+                room.getDailyRate(),
+                reservationId
+        );
     }
 }

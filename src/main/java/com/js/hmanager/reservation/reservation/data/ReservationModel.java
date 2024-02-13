@@ -20,8 +20,6 @@ import java.util.UUID;
 public class ReservationModel {
     @Id
     private UUID id;
-    private OffsetDateTime checkInDate;
-    private OffsetDateTime checkOutDate;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "reservation_id")
@@ -34,8 +32,6 @@ public class ReservationModel {
     public ReservationModel(Reservation reservation) {
         this(
                 reservation.getId(),
-                reservation.getCheckInDate(),
-                reservation.getCheckOutDate(),
                 reservation.getRoms().stream().map(
                         room -> new ReservationRoomModel(reservation.getId(), room)
                 ).toList(),

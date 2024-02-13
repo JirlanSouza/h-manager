@@ -3,9 +3,9 @@ package com.js.hmanager.reservation.reservation.application;
 import com.js.hmanager.reservation.reservation.application.adapters.InventoryService;
 import com.js.hmanager.reservation.reservation.domain.Reservation;
 import com.js.hmanager.reservation.reservation.domain.ReservationRepository;
-import com.js.hmanager.reservation.reservation.domain.ReservationRoom;
 import com.js.hmanager.reservation.customer.domain.CustomerRepository;
 import com.js.hmanager.common.domainExceptions.NotFoundEntityDomainException;
+import com.js.hmanager.reservation.reservation.domain.ReservationRoom;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,27 +36,42 @@ public class CreateReservationService {
             );
         }
 
-        List<ReservationRoom> rooms = inventoryService.findRooms(reservationData.roomIds());
-        this.validateAllRoomsExists(rooms, reservationData.roomIds());
+        List<ReservationRoomData> roomsData = inventoryService.findRooms(
+                reservationData.rooms().stream().map(ReservationRoomDto::id).toList()
+        );
 
-        Reservation reservation = new Reservation(reservationData.checkinDate(), reservationData.checkoutDate(), rooms);
+        validateAllRoomsExists(roomsData, reservationData.rooms());
 
+        List<ReservationRoom> rooms = roomsData.stream().map(roomData -> {
+            ReservationRoomDto roomDto = reservationData.rooms().stream()
+                    .filter(r -> r.id().equals(roomData.id()))
+                    .findFirst().get();
+
+            return new ReservationRoom(
+                    roomData.id(),
+                    roomData.number(),
+                    roomDto.checkIn(),
+                    roomDto.checkOut(),
+                    roomData.dailyRate());
+        }).toList();
+
+        Reservation reservation = new Reservation(rooms);
         reservationRepository.save(reservation);
 
         return reservation.getId();
     }
 
-    private void validateAllRoomsExists(List<ReservationRoom> rooms, List<UUID> roomsIds) {
-        if (rooms.size() == roomsIds.size()) {
+    private void validateAllRoomsExists(List<ReservationRoomData> roomsData, List<ReservationRoomDto> roomsDto) {
+        if (roomsData.size() == roomsDto.size()) {
             return;
         }
 
         StringBuilder builder = new StringBuilder();
 
-        roomsIds.stream()
+        roomsDto.stream()
                 .filter(
-                        roomId -> rooms.stream()
-                                .noneMatch(room -> room.getId().equals(roomId))
+                        roomDto -> roomsData.stream()
+                                .noneMatch(room -> room.id().equals(roomDto.id()))
                 ).forEach(roomId -> builder.append(roomId).append(", "));
 
         builder.delete(builder.length() - 2, builder.length() - 1);

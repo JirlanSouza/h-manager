@@ -12,7 +12,7 @@ public record ReservationPeriod(OffsetDateTime checkIn, OffsetDateTime checkOut)
         validatePeriod(checkIn, checkOut);
     }
 
-    public int getGays() {
+    public int getDays() {
         int days = (int) checkIn.toLocalDate().until(checkOut.toLocalDate(), ChronoUnit.DAYS);
 
         if (checkIn.getHour() <= 11) days++;

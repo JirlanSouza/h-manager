@@ -1,5 +1,6 @@
 package com.js.hmanager.inventory.data;
 
+import com.js.hmanager.reservation.reservation.application.ReservationRoomData;
 import com.js.hmanager.reservation.reservation.application.adapters.InventoryService;
 import com.js.hmanager.reservation.reservation.domain.ReservationRoom;
 import com.js.hmanager.inventory.domain.Room;
@@ -30,12 +31,12 @@ public interface RoomJpaRepository extends JpaRepository<RoomModel, UUID>, RoomR
 
     @Override
     @Query("""
-        select new com.js.hmanager.reservation.reservation.domain.ReservationRoom(
+        select new com.js.hmanager.reservation.reservation.domain.ReservationRoomData(
                 r.id,
                 r.number,
                 r.dailyRate
             )
         from RoomModel as r where r.id in :roomIds
         """)
-    List<ReservationRoom> findRooms(List<UUID> roomIds);
+    List<ReservationRoomData> findRooms(List<UUID> roomIds);
 }

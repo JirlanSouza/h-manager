@@ -5,6 +5,7 @@ import com.js.hmanager.common.AbstractApiTest;
 import com.js.hmanager.common.data.DataPage;
 import com.js.hmanager.inventory.data.RoomModel;
 import com.js.hmanager.reservation.reservation.application.CreateReservationDto;
+import com.js.hmanager.reservation.reservation.application.ReservationRoomDto;
 import com.js.hmanager.reservation.reservation.application.ReservationSummary;
 import com.js.hmanager.reservation.reservation.data.ReservationModel;
 import io.restassured.RestAssured;
@@ -47,14 +48,16 @@ class ReservationControllerIT extends AbstractApiTest {
     @DisplayName("Should create new reservation")
     void createReservation() {
         UUID customerId = this.reservationTestUtils.createCustomerIntoDatabase();
-        List<UUID> roomsIds = this.reservationTestUtils.createRoomsIntoDatabase(1).stream()
-                .map(RoomModel::getId).toList();
+        List<ReservationRoomDto> roomsDto = this.reservationTestUtils.createRoomsIntoDatabase(1).stream()
+                .map(rm -> new ReservationRoomDto(
+                        rm.getId(),
+                        OffsetDateTime.now().plusDays(6),
+                        OffsetDateTime.now().plusDays(10)
+                )).toList();
 
         CreateReservationDto reservationDto = new CreateReservationDto(
                 customerId,
-                OffsetDateTime.now().plusDays(6),
-                OffsetDateTime.now().plusDays(10),
-                roomsIds
+                roomsDto
         );
 
         Response response = given().basePath(RESERVATIONS_ENDPOINT)
@@ -70,14 +73,16 @@ class ReservationControllerIT extends AbstractApiTest {
     @Test
     @DisplayName("Should return 404 NOT FOUND status code when create reservation to non existent customer")
     void createReservationToNonExistentCustomer() {
-        List<UUID> roomsIds = this.reservationTestUtils.createRoomsIntoDatabase(1).stream()
-                .map(RoomModel::getId).toList();
+        List<ReservationRoomDto> roomsDto = this.reservationTestUtils.createRoomsIntoDatabase(1).stream()
+                .map(rm -> new ReservationRoomDto(
+                        rm.getId(),
+                        OffsetDateTime.now().plusDays(6),
+                        OffsetDateTime.now().plusDays(10)
+                )).toList();
 
         CreateReservationDto reservationDto = new CreateReservationDto(
                 UUID.randomUUID(),
-                OffsetDateTime.now().plusDays(6),
-                OffsetDateTime.now().plusDays(10),
-                roomsIds
+                roomsDto
         );
 
         Response response = given().basePath(RESERVATIONS_ENDPOINT)
@@ -94,16 +99,20 @@ class ReservationControllerIT extends AbstractApiTest {
     void createReservationWithNonExistentRooms() {
         UUID customerId = this.reservationTestUtils.createCustomerIntoDatabase();
 
-        List<UUID> roomsIds = new ArrayList<>(this.reservationTestUtils.createRoomsIntoDatabase(1).stream()
-                .map(RoomModel::getId).toList());
-        roomsIds.add(UUID.randomUUID());
+        List<ReservationRoomDto> roomsDto = new ArrayList<>(this.reservationTestUtils.createRoomsIntoDatabase(1).stream()
+                .map(rm -> new ReservationRoomDto(
+                        rm.getId(),
+                        OffsetDateTime.now().plusDays(6),
+                        OffsetDateTime.now().plusDays(10)
+                )).toList());
+        roomsDto.add(new ReservationRoomDto(
+                UUID.randomUUID(), OffsetDateTime.now().plusDays(6), OffsetDateTime.now().plusDays(10))
+        );
 
 
         CreateReservationDto reservationDto = new CreateReservationDto(
                 customerId,
-                OffsetDateTime.now().plusDays(6),
-                OffsetDateTime.now().plusDays(10),
-                roomsIds
+                roomsDto
         );
 
         Response response = given().basePath(RESERVATIONS_ENDPOINT)
@@ -122,7 +131,7 @@ class ReservationControllerIT extends AbstractApiTest {
             ProblemDetail responseBody = response.body().as(ProblemDetail.class);
 
             softly.assertThat(responseBody.getDetail()).as("Response problem detail message")
-                    .isEqualTo("The rooms withs ids: %s does not exists".formatted(roomsIds.get(1)));
+                    .isEqualTo("The rooms withs ids: %s does not exists".formatted(roomsDto.get(1).id()));
 
         });
     }
@@ -131,14 +140,16 @@ class ReservationControllerIT extends AbstractApiTest {
     @DisplayName("Should return 400 BAD REQUEST status code when create reservation with checkin date latter of checkout date")
     void createReservationWithCheckinAfterCheckout() {
         UUID customerId = this.reservationTestUtils.createCustomerIntoDatabase();
-        List<UUID> roomsIds = this.reservationTestUtils.createRoomsIntoDatabase(1).stream()
-                .map(RoomModel::getId).toList();
+        List<ReservationRoomDto> roomsDto = this.reservationTestUtils.createRoomsIntoDatabase(1).stream()
+                .map(rm -> new ReservationRoomDto(
+                        rm.getId(),
+                        OffsetDateTime.now().plusDays(4),
+                        OffsetDateTime.now().plusDays(2)
+                )).toList();
 
         CreateReservationDto reservationDto = new CreateReservationDto(
                 customerId,
-                OffsetDateTime.now().plusDays(4),
-                OffsetDateTime.now().plusDays(2),
-                roomsIds
+                roomsDto
         );
 
         Response response = given().basePath(RESERVATIONS_ENDPOINT)
@@ -181,8 +192,6 @@ class ReservationControllerIT extends AbstractApiTest {
             List<ReservationSummary> data = response.body().jsonPath().getList("data", ReservationSummary.class);
 
             softly.assertThat(data.get(0).id()).as("Is equals ids").isEqualTo(reservations.get(0).getId());
-            softly.assertThat(data.get(0).checkInDate()).as("Is equals checkInDate").isEqualTo(reservations.get(0).getCheckInDate());
-            softly.assertThat(data.get(0).checkOutDate()).as("Is equals checkOutDate").isEqualTo(reservations.get(0).getCheckOutDate());
             softly.assertThat(data.get(0).roomsAmount()).as("Is equals roomsAmount").isEqualTo(reservations.get(0).getRoms().size());
             softly.assertThat(data.get(0).status()).as("Is equals status").isEqualTo(reservations.get(0).getStatus());
             softly.assertThat(data.get(0).totalPrice()).as("Is equals totalPrice").isEqualTo(reservations.get(0).getTotalPrice());
